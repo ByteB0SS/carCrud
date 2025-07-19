@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import { credentialsInterface, returnType, updateCredentialsInterface } from "./interfaces.controllers.js";
 import adminSchema, { updateCredentialsSchema } from "../validators/admin.validators.js";
-import { getAdminRealCredencials, updateAdminCredentialsOnDb, addAdmin} from "../models/admin.models.js";
+import { getAdminRealCredencials, updateAdminCredentialsOnDb, addAdmin, deleteAdminFromDb} from "../models/admin.models.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv'
 import { send } from "process";
-
+import { func } from "joi";
+import pool from "../db.js";
 dotenv.config()
 
 export async function loginAdmin(req: Request, res: Response): Promise<Response> {
@@ -222,7 +223,126 @@ export async function createAdmin (req: Request, res: Response) {
     });
   }
 
+  adminData.passWord = await bcrypt.hash(adminData.passWord, 15);
+
   let result = await addAdmin(adminData.adminName, adminData.passWord)
 
   return res.status(result.status).json(result)
+}
+
+export async function deleteAdmin(req: Request, res: Response) {  
+  const token = req.headers["auth"];
+
+  const adminData: credentialsInterface = {
+    adminName: req.body.adminName,
+    passWord: req.body.passWord
+  };
+
+  const { error } = adminSchema.validate(adminData);
+  if (error) {
+    return res.status(400).json({
+      body: undefined,
+      msg: error.message,
+      serverError: false,
+      status: 400
+    });
+  }
+
+  const existingAdmin = await getAdminRealCredencials(adminData.adminName);
+  if (!existingAdmin.body || existingAdmin.body.length === 0) { 
+    return res.status(404).json({
+      body: undefined,
+      msg: 'Admin não encontrado.',
+      serverError: false,
+      status: 404
+    });
+  }
+
+  //verifcar quantos admins existem no banco, se não for o último admin, permitir a exclusão
+  const [rows] = await pool.query('SELECT COUNT(*) as count FROM admins');
+  const count = (rows as Array<{ count: number }>)[0].count;
+  if (count <= 1) {
+    return res.status(400).json({
+      body: undefined,
+      msg: 'Não é possível excluir o último admin.',
+      serverError: false,
+      status: 400
+    });
+  }
+
+  const adminDataFromDb = existingAdmin.body[0];
+  const correctPassWord = await bcrypt.compare(adminData.passWord, adminDataFromDb.pass_word);
+  if (!correctPassWord) {
+    return res.status(401).json({
+      body: undefined,
+      msg: 'Senha incorreta.',
+      serverError: false,
+      status: 401
+    });
+  }
+
+  try {
+    jwt.verify(String(token), String(process.env.JWT_SECRET));
+  } catch (err) {
+    return res.status(403).json({
+      body: undefined,
+      msg: 'Token inválido ou expirado.',
+      serverError: false,
+      status: 403
+    });
+  }
+
+
+  let result = await deleteAdminFromDb(req.body.adminName);
+
+  return res.status(result.status).json(result);
+}
+
+export async function getAllAdmins(req: Request, res: Response): Promise<Response> {
+  let token = req.headers["auth"];
+  if (!token) {
+    return res.status(401).json({
+      body: undefined,
+      msg: 'Token não fornecido.',
+      serverError: false,
+      status: 401
+    });
+  }
+  
+  try {
+    jwt.verify(String(token), String(process.env.JWT_SECRET));
+  } catch (err) {
+    return res.status(403).json({
+      body: undefined,
+      msg: 'Token inválido ou expirado.',
+      serverError: false,
+      status: 403
+    });
+  }
+  
+  try {
+    const [rows] = await pool.query('SELECT admin_name FROM admins');
+    const admins = rows as Array<{ admin_name: string }>;
+    if (admins.length === 0) {
+      return res.status(404).json({
+        body: undefined,
+        msg: 'Nenhum admin encontrado.',
+        serverError: false,
+        status: 404
+      });
+    }
+    return res.status(200).json({
+      body: admins,
+      msg: 'Admins encontrados com sucesso.',
+      serverError: false,
+      status: 200
+    });
+  } catch (error) {
+    return res.status(500).json({
+      body: undefined,
+      msg: 'Erro ao buscar admins.',
+      serverError: true,
+      status: 500
+    });
+  }
 }
