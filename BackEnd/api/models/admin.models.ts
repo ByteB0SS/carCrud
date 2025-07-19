@@ -1,5 +1,6 @@
 import pool from "../db.js";
 import { returnType, updateCredentialsInterface } from "../controllers/interfaces.controllers.js";
+import { send } from "process";
 
 export async function getAdminRealCredencials (admin: string): Promise<returnType> {
     try{
@@ -47,11 +48,34 @@ export async function updateAdminCredentialsOnDb(admin: updateCredentialsInterfa
       msg: 'Credenciais atualizadas com sucesso.'
     };
   } catch (error) {
-    return {
+    return { 
       serverError: true,
       status: 500,
       body: null,
       msg: (error as Error).message || 'Erro ao atualizar credenciais.'
     };
+  }
+}
+
+
+let data: returnType
+
+export async function  addAdmin(name: string, pass_word: string): Promise<returnType> {
+  try{
+    await pool.query("INSERT INTO `car_project`.`admins` (`admin_name`, `pass_word`) VALUES (?, ?);", [name, pass_word])
+    return {
+      body: undefined,
+      msg: "Admin criado com sucesso.",
+      serverError: false,
+      status: 200,
+    }
+  }
+  catch {
+    return {
+      body: undefined,
+      msg: "Não conseguimos cadastrar um novo admin",
+      serverError: true,
+      status: 3,
+    }
   }
 }

@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import { credentialsInterface, returnType, updateCredentialsInterface } from "./interfaces.controllers.js";
 import adminSchema, { updateCredentialsSchema } from "../validators/admin.validators.js";
-import { getAdminRealCredencials, updateAdminCredentialsOnDb } from "../models/admin.models.js";
+import { getAdminRealCredencials, updateAdminCredentialsOnDb, addAdmin} from "../models/admin.models.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv'
+import { send } from "process";
 
 dotenv.config()
 
@@ -156,7 +157,7 @@ export async function updateCredentials(req: Request, res: Response): Promise<Re
     const result = await updateAdminCredentialsOnDb(
       { 
         ...updateCredentialsValues, 
-        newPassWord: hashSenhaNova 
+        newPassWord: hashSenhaNova  
       }, 
       updateCredentialsValues.oldAdminName
     );
@@ -180,4 +181,48 @@ export async function updateCredentials(req: Request, res: Response): Promise<Re
       status: 403
     });
   }
+}
+
+export async function createAdmin (req: Request, res: Response) {
+  const token = req.headers["auth"]
+
+  const adminData: credentialsInterface = {
+    adminName: req.body.adminName,
+    passWord: req.body.passWord
+  };
+
+  const { error } = adminSchema.validate(adminData);
+  if (error) {
+    return res.status(400).json({
+      body: undefined,
+      msg: error.message,
+      serverError: false,
+      status: 400
+    });
+  }
+  //validar token com jwt.verify
+  try {
+    jwt.verify(String(token), String(process.env.JWT_SECRET));
+  } catch (err) {                      
+    return res.status(403).json({
+      body: undefined,
+      msg: 'Token inválido ou expirado.',
+      serverError: false,
+      status: 403
+    });
+  }
+
+  const existingAdmin = await getAdminRealCredencials(adminData.adminName);
+  if (existingAdmin.body && existingAdmin.body.length > 0) {
+    return res.status(409).json({
+      body: undefined,
+      msg: 'Admin já existe.',
+      serverError: false,
+      status: 409     
+    });
+  }
+
+  let result = await addAdmin(adminData.adminName, adminData.passWord)
+
+  return res.status(result.status).json(result)
 }
