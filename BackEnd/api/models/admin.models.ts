@@ -1,6 +1,5 @@
 import pool from "../db.js";
-import { returnType } from "../controllers/interfaces.controllers.js";
-import { array } from "joi";
+import { returnType, updateCredentialsInterface } from "../controllers/interfaces.controllers.js";
 
 export async function getAdminRealCredencials (admin: string): Promise<returnType> {
     try{
@@ -33,4 +32,26 @@ export async function getAdminRealCredencials (admin: string): Promise<returnTyp
             status: 500
         }
     }
+}
+export async function updateAdminCredentialsOnDb(admin: updateCredentialsInterface, ref: string): Promise<returnType> {
+  try {
+    // Importante: salvar a senha já hasheada
+    await pool.query(
+      'UPDATE admins SET admin_name = ?, pass_word = ? WHERE admin_name = ?;',
+      [admin.newAdminName, admin.newPassWord, ref]
+    );
+    return {
+      serverError: false,
+      status: 200,
+      body: null,
+      msg: 'Credenciais atualizadas com sucesso.'
+    };
+  } catch (error) {
+    return {
+      serverError: true,
+      status: 500,
+      body: null,
+      msg: (error as Error).message || 'Erro ao atualizar credenciais.'
+    };
+  }
 }

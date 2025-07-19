@@ -1,6 +1,9 @@
 import express from 'express'
 import carRoutes from './routes/cars.routes.js'
 import adminRoutes from "./routes/admin.routes.js"
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const server = express()
 server.use(express.json())

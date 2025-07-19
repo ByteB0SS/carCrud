@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
-import { credentialsInterface } from "./interfaces.controllers.js";
-import adminSchema from "../validators/admin.validators.js";
-import { getAdminRealCredencials } from "../models/admin.models.js";
+import { credentialsInterface, returnType, updateCredentialsInterface } from "./interfaces.controllers.js";
+import adminSchema, { updateCredentialsSchema } from "../validators/admin.validators.js";
+import { getAdminRealCredencials, updateAdminCredentialsOnDb } from "../models/admin.models.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { returnType } from "./interfaces.controllers.js";
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 export async function loginAdmin(req: Request, res: Response): Promise<Response> {
     let dataTobeReturned: returnType
@@ -70,7 +72,7 @@ export async function loginAdmin(req: Request, res: Response): Promise<Response>
             process.env.JWT_SECRET as string,
             { expiresIn: '1h' }
         );
-        
+
         dataTobeReturned = {
             body: { token },
             msg: "Login realizado com sucesso",
@@ -92,6 +94,90 @@ export async function loginAdmin(req: Request, res: Response): Promise<Response>
 }
 
 
-export async function updateCredentials(req: Request, res: Response){
-    
+export async function updateCredentials(req: Request, res: Response): Promise<Response> {
+  const token = String(req.headers['auth']);
+
+  const updateCredentialsValues: updateCredentialsInterface = {
+    newAdminName: req.body.newAdminName,
+    newPassWord: req.body.newPassWord,
+    oldPassWord: req.body.oldPassWord,
+    oldAdminName: req.body.oldAdminName
+  };
+
+  const { error } = updateCredentialsSchema.validate(updateCredentialsValues);
+  if (error) {
+    return res.status(400).json({
+      body: undefined,
+      msg: error.message,
+      serverError: false,
+      status: 400
+    });
+  }
+
+  if (updateCredentialsValues.oldPassWord === updateCredentialsValues.newPassWord) {
+    return res.status(400).json({
+      body: undefined,
+      msg: 'A nova senha não pode ser igual à anterior.',
+      serverError: false,
+      status: 400
+    });
+  }
+
+  try {
+    const payload = jwt.verify(token, String(process.env.JWT_SECRET)) as { adminName: string };
+    const adminName = payload.adminName;
+
+    const realCredencials = await getAdminRealCredencials(adminName);
+    const adminData = realCredencials.body?.[0];
+
+    if (!adminData) {
+      return res.status(404).json({
+        body: undefined,
+        msg: 'Admin não encontrado.',
+        serverError: false,
+        status: 404
+      });
+    }
+
+    const senhaCorreta = await bcrypt.compare(updateCredentialsValues.oldPassWord, adminData.pass_word);
+    if (!senhaCorreta) {
+      return res.status(401).json({
+        body: undefined,
+        msg: 'Senha atual incorreta.',
+        serverError: false,
+        status: 401
+      });
+    }
+
+    // Hash da nova senha antes de atualizar no banco
+    const hashSenhaNova = await bcrypt.hash(updateCredentialsValues.newPassWord, 10);
+
+    // Atualiza credenciais com a senha já hasheada
+    const result = await updateAdminCredentialsOnDb(
+      { 
+        ...updateCredentialsValues, 
+        newPassWord: hashSenhaNova 
+      }, 
+      updateCredentialsValues.oldAdminName
+    );
+
+    if (result.serverError) {
+      return res.status(result.status).json(result);
+    }
+
+    return res.status(200).json({
+      body: null,
+      msg: 'Credenciais atualizadas com sucesso.',
+      serverError: false,
+      status: 200
+    });
+
+  } catch (err) {
+    return res.status(403).json({
+      body: undefined,
+      msg: 'Token inválido ou expirado.',
+      serverError: false,
+      status: 403
+    });
+  }
 }
