@@ -1,8 +1,8 @@
 import pool from "../db.js";
-import { sqlReturnInterface } from "../controllers/interfaces.controllers.js";
+import { returnType } from "../controllers/interfaces.controllers.js";
 import { array } from "joi";
 
-export async function getAdminRealCredencials (admin: string): Promise<sqlReturnInterface> {
+export async function getAdminRealCredencials (admin: string): Promise<returnType> {
     try{
         let [row, trush] = await pool.query('select admin_name, pass_word from admins where admin_name like ?;',[admin])
 

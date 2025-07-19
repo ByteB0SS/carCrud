@@ -1,8 +1,8 @@
 import pool from "../db.js";
-import { sqlReturnInterface } from "../controllers/interfaces.controllers.js";
+import { returnType } from "../controllers/interfaces.controllers.js";
 
 // Função que retorna os valores possíveis de uma coluna ENUM da tabela 'cars'
-export async function getEnumValues(columnName: string): Promise<sqlReturnInterface> {
+export async function getEnumValues(columnName: string): Promise<returnType> {
     try {
         const [rows]: any = await pool.query(`SHOW COLUMNS FROM cars LIKE ?`, [columnName]);
 

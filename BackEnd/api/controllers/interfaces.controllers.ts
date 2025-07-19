@@ -1,4 +1,4 @@
-export interface sqlReturnInterface {
+export interface returnType {
     serverError: boolean,
     status: number,
     body: any,
