@@ -1,10 +1,23 @@
-import { Router, Request, Response } from 'express'
-import { send } from 'process'
+import { Router, Request, Response, NextFunction } from 'express'
+import { verifyToken, verifyWithJoi } from "../middlewares/cars.middlewares.js"
+//import { addCar, updateCar, deleteCar, getAllCars, getById, getSelectOptions} from "../controllers/cars.controllers.js"
+import { addCar, updateCar, deleteCar, getAllCars, getById} from "../controllers/cars.controllers.js"
+import vehicleSchema from '../validators/cars.validators.js'
+import { get } from 'http'
+
 
 const router = Router()
 
-router.get('/', (req: Request, res: Response) => {
-    res.send("Carros")
-})
+router.get('/', verifyToken, getAllCars)
 
-export default router
+// router.get('/selectOptions', verifyToken, getSelectOptions)
+
+router.get('/:id', verifyToken, getById)
+
+router.post('/', verifyToken, verifyWithJoi(vehicleSchema), addCar)
+
+router.put('/updateCar/:id', verifyToken, verifyWithJoi(vehicleSchema), updateCar)
+
+router.delete('/deleteCar/:id', verifyToken, deleteCar)
+
+export default router 

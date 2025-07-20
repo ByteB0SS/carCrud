@@ -1,0 +1,59 @@
+import { VehicleInterface } from "./interfaces.controllers.js";
+import { Request, Response } from 'express';
+import { postVehicleOnDb, updateCarOnDb, deleteCarOnDb, getAllCarsFromDb, getAdminById } from '../models/cars.models.js';
+
+// Function to add a car
+export async function addCar(req: Request, res: Response) {
+    const vehicle: VehicleInterface = req.body;
+    try {
+        const result = await postVehicleOnDb(vehicle);
+
+        return res.status(Number(result.status)).json(result);
+    } catch (error) {
+        console.error("Erro ao adicionar veículo:", error);
+        return res.status(500).json({
+            serverError: true,
+            status: 500,
+            msg: "Erro interno ao adicionar veículo"
+        }); 
+    } 
+}
+
+// Function to update a car
+export async function updateCar(req: Request, res: Response) {
+    const vehicleId = req.params.id;
+
+    const vehicleData: VehicleInterface = req.body;
+
+    const result = await updateCarOnDb(vehicleData, Number(vehicleId))
+
+    return res.status(Number(result.status)).json(result);
+}
+
+// Function to delete a car
+export async function deleteCar(req: Request, res: Response) {
+    const carId = req.params.id;
+    
+    const result = await deleteCarOnDb(Number(carId));
+
+    return res.status(Number(result.status)).json(result);
+}
+
+
+// Function to get all cars
+export async function getAllCars(req: Request, res: Response) {
+    const result = await getAllCarsFromDb();
+
+    return res.status(Number(result.status)).json(result);
+}
+
+//Function to get a car by ID
+export async function getById(req: Request, res: Response) {
+    const carId = Number(req.params.id)
+    const result = await getAdminById(carId);
+    return res.status(Number(result.status)).json(result);
+}
+
+export async function getSelection(){
+    
+}

@@ -95,3 +95,5 @@ const schema = joi.object({
         'any.required': 'Todos os campos devem ser preenchidos.'
     }),
 })
+
+export default schema
