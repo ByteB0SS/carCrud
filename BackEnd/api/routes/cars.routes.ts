@@ -1,5 +1,5 @@
-import { Router, Request, Response, NextFunction } from 'express'
-import { verifyToken, verifyWithJoi } from "../middlewares/cars.middlewares.js"
+import { Router} from 'express'
+import { verifyToken, verifyWithJoi, verifyValidEnumValues } from "../middlewares/cars.middlewares.js"
 import { addCar, updateCar, deleteCar, getAllCars, getById, getSelectOptions} from "../controllers/cars.controllers.js"
 import vehicleSchema from '../validators/cars.validators.js'
 
@@ -12,9 +12,9 @@ router.get('/selectOptions', verifyToken, getSelectOptions)
 
 router.get('/:id', verifyToken, getById)
 
-router.post('/', verifyToken, verifyWithJoi(vehicleSchema), addCar)
+router.post('/', verifyToken, verifyWithJoi(vehicleSchema), verifyValidEnumValues, addCar)
 
-router.put('/updateCar/:id', verifyToken, verifyWithJoi(vehicleSchema), updateCar)
+router.put('/updateCar/:id', verifyToken, verifyWithJoi(vehicleSchema),verifyValidEnumValues, updateCar)
 
 router.delete('/deleteCar/:id', verifyToken, deleteCar)
 

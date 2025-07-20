@@ -106,6 +106,8 @@ export async function updateCredentials(req: Request, res: Response): Promise<Re
     oldAdminName: req.body.oldAdminName
   };
 
+  console.log(updateCredentialsValues);
+
   const { error } = updateCredentialsSchema.validate(updateCredentialsValues);
   if (error) {
     return res.status(400).json({
@@ -127,9 +129,8 @@ export async function updateCredentials(req: Request, res: Response): Promise<Re
 
   try {
     const payload = jwt.verify(token, String(process.env.JWT_SECRET)) as { adminName: string };
-    const adminName = payload.adminName;
 
-    const realCredencials = await getAdminRealCredencials(adminName);
+    const realCredencials = await getAdminRealCredencials(updateCredentialsValues.oldAdminName);
     const adminData = realCredencials.body?.[0];
 
     if (!adminData) {

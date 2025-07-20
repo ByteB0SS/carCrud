@@ -3,7 +3,7 @@ import { returnType, updateCredentialsInterface } from "../controllers/interface
 import  jwt  from "jsonwebtoken";
 export async function getAdminRealCredencials (admin: string): Promise<returnType> {
     try{
-        let [row, trush] = await pool.query('select admin_name, pass_word from admins where admin_name like ?;',[admin])
+        let [row, trush] = await pool.query('select admin_name, pass_word from admins where admin_name = ?;',[admin])
 
         let rowAux = row as Array<{admin_name: string, pass_word: string}>
         if(rowAux.length === 0){

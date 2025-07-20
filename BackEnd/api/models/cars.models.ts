@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import pool from "../db.js"; // Assumindo que o pool é configurado com mysql2/promise
 import { VehicleInterface } from "../controllers/interfaces.controllers.js";
+import { getEnumValues } from "./adtional.models.js";
 
 export async function postVehicleOnDb(data: VehicleInterface) {
   const {
