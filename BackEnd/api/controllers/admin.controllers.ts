@@ -322,7 +322,7 @@ export async function getAllAdmins(req: Request, res: Response): Promise<Respons
   }
   
   try {
-    const [rows] = await pool.query('SELECT id, admin_name FROM admins');
+    const [rows] = await pool.query('SELECT id, admin_name, role FROM admins');
     const admins = rows as Array<{ admin_name: string }>;
     if (admins.length === 0) {
       return res.status(404).json({

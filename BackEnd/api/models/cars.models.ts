@@ -21,6 +21,8 @@ export async function postVehicleOnDb(data: VehicleInterface) {
     number_of_cylinders,
     gross_weight_kg,
     curb_weight_kg,
+    custom_fuel_type,
+    custom_transmission_type
   } = data;
 
   try {
@@ -52,6 +54,8 @@ export async function postVehicleOnDb(data: VehicleInterface) {
       number_of_cylinders,
       gross_weight_kg,
       curb_weight_kg,
+      custom_fuel_type || null,
+      custom_transmission_type || null
     ];
 
     const sql = `
@@ -59,8 +63,8 @@ export async function postVehicleOnDb(data: VehicleInterface) {
         brand, model, color, license_plate, engine_number, chassis_number,
         tire_measurements, seating_capacity, fuel_type, wheelbase_cm,
         transmission_type, acquisition_year, displacement_cc,
-        number_of_cylinders, gross_weight_kg, curb_weight_kg
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        number_of_cylinders, gross_weight_kg, curb_weight_kg, custom_fuel_type, custom_transmission_type
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     await pool.query(sql, values); // Usando .query() com Promise
@@ -133,6 +137,8 @@ export async function updateCarOnDb(data: VehicleInterface, carId: number) {
       data.number_of_cylinders,
       data.gross_weight_kg,
       data.curb_weight_kg,
+      data.custom_fuel_type || null,
+      data.custom_transmission_type || null,
       carId
     ];
 
@@ -142,7 +148,7 @@ export async function updateCarOnDb(data: VehicleInterface, carId: number) {
         chassis_number = ?, tire_measurements = ?, seating_capacity = ?,
         fuel_type = ?, wheelbase_cm = ?, transmission_type = ?,
         acquisition_year = ?, displacement_cc = ?, number_of_cylinders = ?,
-        gross_weight_kg = ?, curb_weight_kg = ?
+        gross_weight_kg = ?, curb_weight_kg = ?, custom_fuel_type = ?, custom_transmission_type = ?
       WHERE id = ?
     `;
 
