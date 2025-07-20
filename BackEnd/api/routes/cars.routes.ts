@@ -1,16 +1,14 @@
 import { Router, Request, Response, NextFunction } from 'express'
 import { verifyToken, verifyWithJoi } from "../middlewares/cars.middlewares.js"
-//import { addCar, updateCar, deleteCar, getAllCars, getById, getSelectOptions} from "../controllers/cars.controllers.js"
-import { addCar, updateCar, deleteCar, getAllCars, getById} from "../controllers/cars.controllers.js"
+import { addCar, updateCar, deleteCar, getAllCars, getById, getSelectOptions} from "../controllers/cars.controllers.js"
 import vehicleSchema from '../validators/cars.validators.js'
-import { get } from 'http'
 
 
 const router = Router()
 
 router.get('/', verifyToken, getAllCars)
 
-// router.get('/selectOptions', verifyToken, getSelectOptions)
+router.get('/selectOptions', verifyToken, getSelectOptions)
 
 router.get('/:id', verifyToken, getById)
 

@@ -31,9 +31,11 @@ export interface VehicleInterface {
   chassis_number: string;
   tire_measurements: string;
   seating_capacity: number;
-  fuel_type: 'Gasolina' | 'Diesel' | 'Flex' | 'Elétrico' | 'Híbrido';
+  fuel_type: string;
+  custom_fuel_type: string | null | undefined | '';
   wheelbase_cm: number;
-  transmission_type: 'Manual' | 'Automático' | 'CVT' | 'Semi-automático';
+  transmission_type: string;
+  custom_transmission_type: string | null | undefined | '';
   acquisition_year: number;
   displacement_cc: number;
   number_of_cylinders: number;
