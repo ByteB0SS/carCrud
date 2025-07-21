@@ -188,28 +188,12 @@ export async function createAdmin (req: Request, res: Response) {
   return res.status(result.status).json(result)
 }
 
-/*
 
 export async function deleteAdmin(req: Request, res: Response) {  
-  const token = req.headers["auth"];
+  const tokenPayload = res.locals.user;
+  const adminToBeDeletedId = req.params.id;
 
-  const adminData: credentialsInterface = {
-    adminName: req.body.adminName,
-    passWord: req.body.passWord
-  };
-
-  const { error } = adminSchema.validate(adminData);
-  if (error) {
-    return res.status(400).json({
-      body: undefined,
-      msg: error.message,
-      serverError: false,
-      status: 400
-    });
-  }
-}
-
-  const existingAdmin = await getAdminRealCredencials(adminData.adminName);
+  const existingAdmin = await getAdminRealCredencials(adminToBeDeletedId, 'id');
   if (!existingAdmin.body || existingAdmin.body.length === 0) { 
     return res.status(404).json({
       body: undefined,
@@ -219,44 +203,27 @@ export async function deleteAdmin(req: Request, res: Response) {
     });
   }
 
-  //verifcar quantos admins existem no banco, se não for o último admin, permitir a exclusão
-  const [rows] = await pool.query('SELECT COUNT(*) as count FROM admins');
-  const count = (rows as Array<{ count: number }>)[0].count;
-  if (count <= 1) {
-    return res.status(400).json({
-      body: undefined,
-      msg: 'Não é possível excluir o último admin.',
-      serverError: false,
-      status: 400
-    });
-  }
-
-  const adminDataFromDb = existingAdmin.body[0];
-  const correctPassWord = await bcrypt.compare(adminData.passWord, adminDataFromDb.pass_word);
-  if (!correctPassWord) {
-    return res.status(401).json({
-      body: undefined,
-      msg: 'Senha incorreta.',
-      serverError: false,
-      status: 401
-    });
-  }
-
-  try {
-    jwt.verify(String(token), String(process.env.JWT_SECRET));
-  } catch (err) {
+  if (existingAdmin.body[0].admin_name !== tokenPayload.adminName && tokenPayload.role !== 'root') {
     return res.status(403).json({
       body: undefined,
-      msg: 'Token inválido ou expirado.',
+      msg: 'Você não tem permissão para deletar este admin.',
       serverError: false,
       status: 403
     });
   }
 
+  if (existingAdmin.body[0].role === 'root') {
+    return res.status(403).json({
+      body: undefined, 
+      msg: 'Você não pode deletar um admin com a função root.',
+      serverError: false,
+      status: 403
+    });
+  }
+
+  const adminDataFromDb = existingAdmin.body[0];
 
   let result = await deleteAdminFromDb(req.body.adminName);
 
   return res.status(result.status).json(result);
 }
-
-*/

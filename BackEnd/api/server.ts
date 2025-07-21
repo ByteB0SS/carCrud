@@ -1,16 +1,42 @@
-import express from 'express'
-import carRoutes from './routes/cars.routes.js'
-import adminRoutes from "./routes/admin.routes.js"
-import dotenv from 'dotenv'
+import express from 'express';
+import carRoutes from './routes/cars.routes.js';
+import adminRoutes from './routes/admin.routes.js';
+import dotenv from 'dotenv';
+import rateLimit from 'express-rate-limit';
 
-dotenv.config()
+dotenv.config();
 
-const server = express()
-server.use(express.json())
-server.use("/api/cars", carRoutes)
-server.use("/api/admin", adminRoutes)  
+const server = express();
 
-const port: number = 3833
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // Limite de 100 requisições
+  message: {
+    msg: 'Muitas requisições, tente novamente mais tarde.',
+    serverError: false,
+    status: 429,
+    body: undefined
+  }
+});
 
-server.listen(port, () => console.log(`running server on http://localhost:${port}`))
+server.use(limiter);
 
+server.use(express.json());
+
+
+server.use('/cars', carRoutes);
+server.use('/admin', adminRoutes);
+
+// Proteção de CORS (se necessário)
+server.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
+
+// Definir porta
+const port: number = 8558;
+
+// Iniciar o servidor
+server.listen(port, () => console.log(`Servidor rodando em http://localhost:${port}`));
