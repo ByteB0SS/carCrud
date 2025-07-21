@@ -18,6 +18,33 @@ USE `car_project`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `admins`
+--
+
+DROP TABLE IF EXISTS `admins`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `admins` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `admin_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pass_word` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'normal',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `admin_name` (`admin_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `admins`
+--
+
+LOCK TABLES `admins` WRITE;
+/*!40000 ALTER TABLE `admins` DISABLE KEYS */;
+INSERT INTO `admins` VALUES (1,'root','$2b$15$S.bsHf7XJf3KsJwAmumIpegpkoz/7ER6a4/dqQu3Ef5GrLO9u2HJ6','root');
+/*!40000 ALTER TABLE `admins` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `cars`
 --
 
@@ -30,9 +57,9 @@ CREATE TABLE `cars` (
   `model` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `color` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `seating_capacity` int NOT NULL,
-  `fuel_type` enum('Gasolina','Diesel','Flex','Elétrico','Híbrido') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `fuel_type` enum('Gasolina','Diesel','Flex','Elétrico','Híbrido','Outro') COLLATE utf8mb4_unicode_ci NOT NULL,
   `wheelbase_cm` float NOT NULL,
-  `transmission_type` enum('Manual','Automático','CVT','Semi-automático') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `transmission_type` enum('Manual','Automático','CVT','Semi-automático','Outro') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `license_plate` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `acquisition_year` year NOT NULL,
   `engine_number` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -42,6 +69,8 @@ CREATE TABLE `cars` (
   `number_of_cylinders` int NOT NULL,
   `gross_weight_kg` int NOT NULL,
   `curb_weight_kg` int NOT NULL,
+  `custom_fuel_type` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `custom_transmission_type` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `license_plate` (`license_plate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -65,4 +94,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-19  8:04:04
+-- Dump completed on 2025-07-21  4:01:39
