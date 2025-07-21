@@ -1,27 +1,15 @@
 import { Router, Request, Response } from 'express'
-import { loginAdmin, updateCredentials, createAdmin, deleteAdmin, getAllAdmins} from '../controllers/admin.controllers.js'
-
-
+import { loginAdmin, updateCredentials, getAllAdmins} from '../controllers/admin.controllers.js'
+//import { loginAdmin, updateCredentials, createAdmin, deleteAdmin, getAllAdmins} from '../controllers/admin.controllers.js'
+import { verifyToken, verifyWithJoi} from '../middlewares/both.middlewares.js'
+import { adminSchema, updateCredentialsSchema} from '../validators/admin.validators.js'
 
 const router = Router()
 
-router.get('/', (req: Request, res: Response) => {
-    getAllAdmins(req, res)
-});
-router.post('/', (req: Request, res: Response) => {
-    loginAdmin(req, res)
-})
+router.get('/', verifyToken, getAllAdmins)
 
-router.put("/update/credentials", (req: Request, res: Response)=> {
-    updateCredentials(req, res)
-})
+router.post('/login',verifyWithJoi(adminSchema), loginAdmin)
 
-router.post("/new", (req: Request, res: Response)=> {
-    createAdmin(req, res)
-})
-
-router.delete("/delete", (req: Request, res: Response)=> {
-    deleteAdmin(req, res)
-})
+router.put('/update', verifyToken, verifyWithJoi(updateCredentialsSchema), updateCredentials)
 
 export default router

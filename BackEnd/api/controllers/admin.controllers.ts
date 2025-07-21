@@ -1,190 +1,161 @@
 import { Request, Response } from "express";
-import { credentialsInterface, returnType, updateCredentialsInterface } from "./interfaces.controllers.js";
-import adminSchema, { updateCredentialsSchema } from "../validators/admin.validators.js";
+import { credentialsInterface, updateCredentialsInterface } from "./interfaces.controllers.js";
+import { adminSchema, updateCredentialsSchema } from "../validators/admin.validators.js";
 import { getAdminRealCredencials, updateAdminCredentialsOnDb, addAdmin, deleteAdminFromDb} from "../models/admin.models.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv'
-import { send } from "process";
-import { func } from "joi";
 import pool from "../db.js";
+import { send } from "process";
 dotenv.config()
 
+export async function getAllAdmins(req: Request, res: Response): Promise<Response> {
+  try {
+    const [rows] = await pool.query('SELECT id, admin_name, role FROM admins');
+    const admins = rows as Array<{ admin_name: string }>;
+    if (admins.length === 0) {
+      return res.status(404).json({
+        body: undefined,
+        msg: 'Nenhum admin encontrado.',
+        serverError: false,
+        status: 404
+      });
+    }
+    return res.status(200).json({
+      body: admins,
+      msg: 'Admins encontrados com sucesso.',
+      serverError: false,
+      status: 200
+    });
+  } catch (error) {
+    return res.status(500).json({
+      body: undefined,
+      msg: 'Erro ao buscar admins.',
+      serverError: true,
+      status: 500
+    });
+  }
+}
+
 export async function loginAdmin(req: Request, res: Response): Promise<Response> {
-    let dataTobeReturned: returnType
     const credentials: credentialsInterface = {
         adminName: req.body.adminName,
         passWord: req.body.passWord
     };
 
-    // Validação com Joi
-    const { error } = adminSchema.validate(credentials);
-    if (error) {
-        dataTobeReturned = {
-            body: undefined,
-            msg: error.message,
-            serverError: false,
-            status: 400
-        }
-
-        return res.status(400).json(dataTobeReturned);
-    }
-
     // Busca credenciais no banco
-    const realCredencials = await getAdminRealCredencials(credentials.adminName);
-
-    if (realCredencials.serverError) {
-        dataTobeReturned = {
-            body: undefined,
-            msg: realCredencials.msg || "Erro ao buscar credenciais",
-            serverError: true,
-            status: 500
-        }
-        return res.status(500).json(dataTobeReturned);
+    const realCredencials = await getAdminRealCredencials(credentials.adminName, 'admin_name');
+    if (realCredencials.status !== 200) {
+        return res.status(realCredencials.status).json(realCredencials) 
     }
 
     const adminData = realCredencials.body?.[0];
-    if (!adminData) {
-        dataTobeReturned = {
-            body: undefined,
-            msg: realCredencials.msg || "Admin não encontrado",
-            serverError: false,
-            status: 404
-        }
-        return res.status(404).json(dataTobeReturned);
-    }
 
-    // Verifica senha
+
     try {
         const senhaCorreta = await bcrypt.compare(credentials.passWord, adminData.pass_word);
 
         if (!senhaCorreta) {
-            dataTobeReturned = {
+            return res.status(401).json({
                 body: undefined,
                 msg: "Senha incorreta",
                 serverError: false,
                 status: 401
-            }
-            return res.status(401).json(dataTobeReturned);
+            });
         }
 
         // Gera token JWT
         const token = jwt.sign(
-            { adminName: adminData.admin_name },
+            { adminName: adminData.admin_name, role: adminData.role, id: adminData.id },
             process.env.JWT_SECRET as string,
-            { expiresIn: '1h' }
+            { expiresIn: '1h',  }
         );
 
-        dataTobeReturned = {
+        return res.status(200).json({
             body: { token },
             msg: "Login realizado com sucesso",
             serverError: false,
             status: 200
-        };
-
-        return res.status(200).json(dataTobeReturned);
+        });
 
     } catch (err) {
-        dataTobeReturned = {
+        return res.status(500).json({
             body: undefined,
             msg: "Erro ao verificar senha",
             serverError: true,
             status: 500
-        };
-        return res.status(500).json(dataTobeReturned);
+        });
     }
 }
 
 
 export async function updateCredentials(req: Request, res: Response): Promise<Response> {
-  const token = String(req.headers['auth']);
-
-  const updateCredentialsValues: updateCredentialsInterface = {
+  const tokenPayload = res.locals.user;
+   const updateCredentialsValues: updateCredentialsInterface = {
     newAdminName: req.body.newAdminName,
     newPassWord: req.body.newPassWord,
-    oldPassWord: req.body.oldPassWord,
-    oldAdminName: req.body.oldAdminName
+    oldAdminName: "",
+    id: req.body.id,
   };
+  const realCredencials = await getAdminRealCredencials(updateCredentialsValues.id, 'id');
+  let oldAdminName = realCredencials.body?.[0].admin_name;
+  updateCredentialsValues.oldAdminName = oldAdminName;
 
-  console.log(updateCredentialsValues);
-
-  const { error } = updateCredentialsSchema.validate(updateCredentialsValues);
-  if (error) {
-    return res.status(400).json({
-      body: undefined,
-      msg: error.message,
-      serverError: false,
-      status: 400
-    });
-  }
-
-  if (updateCredentialsValues.oldPassWord === updateCredentialsValues.newPassWord) {
-    return res.status(400).json({
-      body: undefined,
-      msg: 'A nova senha não pode ser igual à anterior.',
-      serverError: false,
-      status: 400
-    });
-  }
-
-  try {
-    const payload = jwt.verify(token, String(process.env.JWT_SECRET)) as { adminName: string };
-
-    const realCredencials = await getAdminRealCredencials(updateCredentialsValues.oldAdminName);
-    const adminData = realCredencials.body?.[0];
-
-    if (!adminData) {
-      return res.status(404).json({
-        body: undefined,
-        msg: 'Admin não encontrado.',
-        serverError: false,
-        status: 404
-      });
-    }
-
-    const senhaCorreta = await bcrypt.compare(updateCredentialsValues.oldPassWord, adminData.pass_word);
-    if (!senhaCorreta) {
-      return res.status(401).json({
-        body: undefined,
-        msg: 'Senha atual incorreta.',
-        serverError: false,
-        status: 401
-      });
-    }
-
-    // Hash da nova senha antes de atualizar no banco
-    const hashSenhaNova = await bcrypt.hash(updateCredentialsValues.newPassWord, 10);
-
-    // Atualiza credenciais com a senha já hasheada
-    const result = await updateAdminCredentialsOnDb(
-      { 
-        ...updateCredentialsValues, 
-        newPassWord: hashSenhaNova  
-      }, 
-      updateCredentialsValues.oldAdminName
-    );
-
-    if (result.serverError) {
-      return res.status(result.status).json(result);
-    }
-
-    return res.status(200).json({
-      body: null,
-      msg: 'Credenciais atualizadas com sucesso.',
-      serverError: false,
-      status: 200
-    });
-
-  } catch (err) {
+  if (req.body.oldAdminName !== tokenPayload.adminName && tokenPayload.role !== 'root') {
     return res.status(403).json({
       body: undefined,
-      msg: 'Token inválido ou expirado.',
+      msg: 'Você não tem permissão para atualizar as credenciais deste admin.',
       serverError: false,
       status: 403
     });
   }
+
+  
+  if(realCredencials.status !== 200) {
+    return res.status(realCredencials.status).json(realCredencials);
+  }
+
+  const hashSenhaNova = await bcrypt.hash(updateCredentialsValues.newPassWord, 15);
+  updateCredentialsValues.newPassWord = hashSenhaNova;
+
+  const result = await updateAdminCredentialsOnDb(updateCredentialsValues);
+
+  if (result.status !== 200) {
+    return res.status(result.status).json(result);
+  }
+  
+  const newAdminData = await getAdminRealCredencials(updateCredentialsValues.id, 'id');
+  if (newAdminData.status !== 200) {
+    return res.status(newAdminData.status).json(newAdminData);
+  }
+
+  let newToken = jwt.sign(
+    {
+      adminName: newAdminData.body[0].admin_name,
+      role: newAdminData.body[0].role,
+      id: newAdminData.body[0].id
+    },
+    process.env.JWT_SECRET as string,
+    { expiresIn: '1h' }
+  );
+
+  let bodyContent = undefined
+
+  if (updateCredentialsValues.oldAdminName === tokenPayload.adminName){
+    bodyContent = {
+      token: newToken
+    }
+  }
+
+  return res.status(200).json({
+      body: bodyContent,
+      msg: 'Credenciais atualizadas com sucesso.',
+      serverError: false,
+      status: 200
+  });
 }
 
+/*
 export async function createAdmin (req: Request, res: Response) {
   const token = req.headers["auth"]
 
@@ -299,51 +270,4 @@ export async function deleteAdmin(req: Request, res: Response) {
   return res.status(result.status).json(result);
 }
 
-export async function getAllAdmins(req: Request, res: Response): Promise<Response> {
-  let token = req.headers["auth"];
-  if (!token) {
-    return res.status(401).json({
-      body: undefined,
-      msg: 'Token não fornecido.',
-      serverError: false,
-      status: 401
-    });
-  }
-  
-  try {
-    jwt.verify(String(token), String(process.env.JWT_SECRET));
-  } catch (err) {
-    return res.status(403).json({
-      body: undefined,
-      msg: 'Token inválido ou expirado.',
-      serverError: false,
-      status: 403
-    });
-  }
-  
-  try {
-    const [rows] = await pool.query('SELECT id, admin_name, role FROM admins');
-    const admins = rows as Array<{ admin_name: string }>;
-    if (admins.length === 0) {
-      return res.status(404).json({
-        body: undefined,
-        msg: 'Nenhum admin encontrado.',
-        serverError: false,
-        status: 404
-      });
-    }
-    return res.status(200).json({
-      body: admins,
-      msg: 'Admins encontrados com sucesso.',
-      serverError: false,
-      status: 200
-    });
-  } catch (error) {
-    return res.status(500).json({
-      body: undefined,
-      msg: 'Erro ao buscar admins.',
-      serverError: true,
-      status: 500
-    });
-  }
-}
+*/

@@ -6,7 +6,9 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const hash = await bcrypt.hash("656&root",15)
-const token = jwt.sign({adminName: "rubem"}, process.env.JWT_SECRET)
+const token = jwt.sign({adminName: "rubem"}, process.env.JWT_SECRET, {
+    expiresIn: "1year"
+})
 
 
 console.log("token: " + token)

@@ -1,5 +1,6 @@
 import { Router} from 'express'
-import { verifyToken, verifyWithJoi, verifyValidEnumValues } from "../middlewares/cars.middlewares.js"
+import { verifyValidEnumValues } from "../middlewares/cars.middlewares.js"
+import { verifyToken, verifyWithJoi } from '../middlewares/both.middlewares.js'
 import { addCar, updateCar, deleteCar, getAllCars, getById, getSelectOptions} from "../controllers/cars.controllers.js"
 import vehicleSchema from '../validators/cars.validators.js'
 

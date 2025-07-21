@@ -1,12 +1,14 @@
 import pool from "../db.js";
 import { returnType, updateCredentialsInterface } from "../controllers/interfaces.controllers.js";
 import  jwt  from "jsonwebtoken";
-export async function getAdminRealCredencials (admin: string): Promise<returnType> {
-    try{
-        let [row, trush] = await pool.query('select admin_name, pass_word from admins where admin_name = ?;',[admin])
 
-        let rowAux = row as Array<{admin_name: string, pass_word: string}>
+export async function getAdminRealCredencials (value: string | number, ref: string): Promise<returnType> {
+    try{
+        let [row, trush] = await pool.query(`select id, role, admin_name, pass_word from admins where ${ref} = ?;`,[value])
+        console.log(`select id, role, admin_name, pass_word from admins where ${ref} = '${value}';`)
+        let rowAux = row as Array<{admin_name: string, pass_word: string, id: number, role: string}>
         if(rowAux.length === 0){
+            console.log(rowAux)
             return {
                 body: undefined,
                 msg: "admin não encontrado",
@@ -25,6 +27,7 @@ export async function getAdminRealCredencials (admin: string): Promise<returnTyp
     }
 
     catch {
+        console.log("erro na conexão com o banco de dados")
         return {
             body: undefined,
             msg: "erro na cenexão com banco de dados",
@@ -33,12 +36,12 @@ export async function getAdminRealCredencials (admin: string): Promise<returnTyp
         }
     }
 }
-export async function updateAdminCredentialsOnDb(admin: updateCredentialsInterface, ref: string): Promise<returnType> {
+export async function updateAdminCredentialsOnDb(admin: updateCredentialsInterface): Promise<returnType> {
   try {
     // Importante: salvar a senha já hasheada
     await pool.query(
       'UPDATE admins SET admin_name = ?, pass_word = ? WHERE admin_name = ?;',
-      [admin.newAdminName, admin.newPassWord, ref]
+      [admin.newAdminName, admin.newPassWord, admin.oldAdminName]
     );
     return {
       serverError: false,

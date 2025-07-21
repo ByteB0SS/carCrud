@@ -11,10 +11,10 @@ export interface credentialsInterface {
 }
 
 export interface updateCredentialsInterface {
-    oldPassWord: string,
+    newPassWord: string,
     newAdminName: string,
     oldAdminName: string,
-    newPassWord: string,
+    id: number,
 }
 
 export interface adminInterface { 
