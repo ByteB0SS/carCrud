@@ -1,6 +1,7 @@
 import pool from "../db.js";
 import { returnType, updateCredentialsInterface } from "../controllers/interfaces.controllers.js";
 import  jwt  from "jsonwebtoken";
+import { get } from "http";
 
 export async function getAdminRealCredencials (value: string | number, ref: string): Promise<returnType> {
     try{
@@ -65,6 +66,7 @@ let data: returnType
 export async function  addAdmin(name: string, pass_word: string): Promise<returnType> {
   try{
     await pool.query("INSERT INTO `car_project`.`admins` (`admin_name`, `pass_word`) VALUES (?, ?);", [name, pass_word])
+
     let token = jwt.sign({adminName: name}, process.env.JWT_SECRET as string, {expiresIn: '1h'})
     return {
       body: {token},

@@ -51,6 +51,15 @@ export async function loginAdmin(req: Request, res: Response): Promise<Response>
 
     const adminData = realCredencials.body?.[0];
 
+    if(adminData.admin_name !== credentials.adminName) {
+        return res.status(404).json({
+            body: undefined,
+            msg: "Admin não encontrado",    
+            serverError: false,
+            status: 404
+        });
+    }
+
 
     try {
         const senhaCorreta = await bcrypt.compare(credentials.passWord, adminData.pass_word);
@@ -155,37 +164,14 @@ export async function updateCredentials(req: Request, res: Response): Promise<Re
   });
 }
 
-/*
-export async function createAdmin (req: Request, res: Response) {
-  const token = req.headers["auth"]
 
+export async function createAdmin (req: Request, res: Response) {
   const adminData: credentialsInterface = {
     adminName: req.body.adminName,
     passWord: req.body.passWord
   };
 
-  const { error } = adminSchema.validate(adminData);
-  if (error) {
-    return res.status(400).json({
-      body: undefined,
-      msg: error.message,
-      serverError: false,
-      status: 400
-    });
-  }
-  //validar token com jwt.verify
-  try {
-    jwt.verify(String(token), String(process.env.JWT_SECRET));
-  } catch (err) {                      
-    return res.status(403).json({
-      body: undefined,
-      msg: 'Token inválido ou expirado.',
-      serverError: false,
-      status: 403
-    });
-  }
-
-  const existingAdmin = await getAdminRealCredencials(adminData.adminName);
+  const existingAdmin = await getAdminRealCredencials(adminData.adminName, 'admin_name');
   if (existingAdmin.body && existingAdmin.body.length > 0) {
     return res.status(409).json({
       body: undefined,
@@ -201,6 +187,8 @@ export async function createAdmin (req: Request, res: Response) {
 
   return res.status(result.status).json(result)
 }
+
+/*
 
 export async function deleteAdmin(req: Request, res: Response) {  
   const token = req.headers["auth"];
@@ -219,6 +207,7 @@ export async function deleteAdmin(req: Request, res: Response) {
       status: 400
     });
   }
+}
 
   const existingAdmin = await getAdminRealCredencials(adminData.adminName);
   if (!existingAdmin.body || existingAdmin.body.length === 0) { 
