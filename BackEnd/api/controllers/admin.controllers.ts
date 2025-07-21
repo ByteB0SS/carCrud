@@ -166,6 +166,15 @@ export async function updateCredentials(req: Request, res: Response): Promise<Re
 
 
 export async function createAdmin (req: Request, res: Response) {
+  const tokenPayload = res.locals.user;
+  if (tokenPayload.role !== 'root') {
+    return res.status(403).json({
+      body: undefined,    
+      msg: 'Você não tem permissão para criar um novo admin.',
+      serverError: false,
+      status: 403
+    });
+  }
   const adminData: credentialsInterface = {
     adminName: req.body.adminName,
     passWord: req.body.passWord

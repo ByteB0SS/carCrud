@@ -9,9 +9,9 @@ const router = Router()
 
 router.get('/', verifyToken, getAllCars)
 
-router.get('/selectOptions', verifyToken, getSelectOptions)
+router.get('/selectOptions', getSelectOptions)
 
-router.get('/:id', verifyToken, getById)
+router.get('/:id', getById)
 
 router.post('/', verifyToken, verifyWithJoi(vehicleSchema), verifyValidEnumValues, addCar)
 
