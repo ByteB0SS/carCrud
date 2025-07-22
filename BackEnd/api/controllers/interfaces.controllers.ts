@@ -43,3 +43,7 @@ export interface VehicleInterface {
   curb_weight_kg: number;
 }
 
+export interface dontSendInterface {
+    listId: number[]
+}
+

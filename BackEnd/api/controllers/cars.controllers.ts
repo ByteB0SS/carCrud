@@ -1,4 +1,4 @@
-import { VehicleInterface } from "./interfaces.controllers.js";
+import { dontSendInterface, VehicleInterface } from "./interfaces.controllers.js";
 import { Request, Response } from 'express';
 import { postVehicleOnDb, updateCarOnDb, deleteCarOnDb, getAllCarsFromDb, getAdminById } from '../models/cars.models.js';
 import { getEnumValues } from '../models/adtional.models.js';

@@ -3,6 +3,7 @@ import carRoutes from './routes/cars.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
+import cors from 'cors'
 
 dotenv.config();
 
@@ -20,7 +21,11 @@ const limiter = rateLimit({
 });
 
 server.use(limiter);
-
+server.use(cors())
+/*server.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}))*/
 server.use(express.json());
 
 
