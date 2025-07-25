@@ -201,8 +201,8 @@ export async function createAdmin (req: Request, res: Response) {
 export async function deleteAdmin(req: Request, res: Response) {  
   const tokenPayload = res.locals.user;
   const adminToBeDeletedId = req.params.id;
-
   const existingAdmin = await getAdminRealCredencials(adminToBeDeletedId, 'id');
+
   if (!existingAdmin.body || existingAdmin.body.length === 0) { 
     return res.status(404).json({
       body: undefined,
@@ -232,7 +232,7 @@ export async function deleteAdmin(req: Request, res: Response) {
 
   const adminDataFromDb = existingAdmin.body[0];
 
-  let result = await deleteAdminFromDb(req.body.adminName);
+  let result = await deleteAdminFromDb(adminToBeDeletedId);
 
   return res.status(result.status).json(result);
 }

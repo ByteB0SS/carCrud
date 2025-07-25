@@ -87,7 +87,8 @@ export async function  addAdmin(name: string, pass_word: string): Promise<return
 
 export async function deleteAdminFromDb (adminName: string): Promise<returnType> {
   try {
-    await pool.query('DELETE FROM admins WHERE admin_name = ?;', [adminName]);
+    console.log(adminName)
+    await pool.query('DELETE FROM admins WHERE id = ?;', [adminName]);
     return {
       body: null,
       msg: 'Admin deletado com sucesso.',
