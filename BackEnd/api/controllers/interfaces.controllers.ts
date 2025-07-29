@@ -41,6 +41,8 @@ export interface VehicleInterface {
   number_of_cylinders: number;
   gross_weight_kg: number;
   curb_weight_kg: number;
+  vehicle_credential: string;
+  vehicle_type: string
 }
 
 export interface dontSendInterface {

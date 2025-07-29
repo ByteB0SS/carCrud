@@ -122,6 +122,17 @@ const schema = joi.object({
         'number.min': 'O campo curb_weight_kg deve ser no mínimo 1.',
         'number.max': 'O campo curb_weight_kg deve ser no máximo 10000.'
     }),
+    vehicle_credential: joi.string().max(150).required().messages({
+    'string.base': 'O campo vehicle_credential deve ser uma string.',
+    'any.required': 'O campo vehicle_credential é obrigatório.',
+    'string.max': 'O campo vehicle_credential deve ter no máximo 150 caracteres.'
+    }),
+
+    vehicle_type: joi.string().max(50).required().messages({
+        'string.base': 'O campo vehicle_type deve ser uma string.',
+        'any.required': 'O campo vehicle_type é obrigatório.',
+        'string.max': 'O campo vehicle_type deve ter no máximo 50 caracteres.'
+    }),
 });
 
 export default schema;
