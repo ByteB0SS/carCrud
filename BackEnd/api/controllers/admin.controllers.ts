@@ -1,12 +1,10 @@
 import { Request, Response } from "express";
 import { credentialsInterface, updateCredentialsInterface } from "./interfaces.controllers.js";
-import { adminSchema, updateCredentialsSchema } from "../validators/admin.validators.js";
 import { getAdminRealCredencials, updateAdminCredentialsOnDb, addAdmin, deleteAdminFromDb} from "../models/admin.models.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv'
 import pool from "../db.js";
-import { send } from "process";
 dotenv.config()
 
 export async function getAllAdmins(req: Request, res: Response): Promise<Response> {
@@ -77,7 +75,7 @@ export async function loginAdmin(req: Request, res: Response): Promise<Response>
         const token = jwt.sign(
             { adminName: adminData.admin_name, role: adminData.role, id: adminData.id },
             process.env.JWT_SECRET as string,
-            { expiresIn: '1h',  }
+            { expiresIn: '30d',  }
         );
 
         return res.status(200).json({
@@ -145,7 +143,7 @@ export async function updateCredentials(req: Request, res: Response): Promise<Re
       id: newAdminData.body[0].id
     },
     process.env.JWT_SECRET as string,
-    { expiresIn: '1h' }
+    { expiresIn: '30d' }
   );
 
   let bodyContent = undefined
