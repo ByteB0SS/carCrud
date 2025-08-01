@@ -1,40 +1,40 @@
 import joi from 'joi';
 
 const schema = joi.object({
-    brand: joi.string().max(150).required().messages({
+    brand: joi.string().max(50).required().messages({
         'string.base': 'O campo Marca deve ser um conjunto de letras.',
         'any.required': 'O campo Marca é obrigatório.',
-        'string.max': 'O campo Marc deve ter menos de 151 caracteres.'
+        'string.max': 'O campo Marca deve ter menos de 50 caracteres.'
     }),
-    model: joi.string().max(150).required().messages({
+    model: joi.string().max(50).required().messages({
         'string.base': 'O campo Modelo deve ser um conjunto de letras.',
         'any.required': 'O campo Modelo é obrigatório.',
-        'string.max': 'O campo Modelo deve ter menos de 151 caracteres.'
+        'string.max': 'O campo Modelo deve ter menos de 50 caracteres.'
     }),
     color: joi.string().max(30).required().messages({
         'string.base': 'O campo Cor deve ser um conjunto de letras.',
         'any.required': 'O campo Cor é obrigatório.',
         'string.max': 'O campo Cor deve ter menos de 31 caracteres.'
     }),
-    license_plate: joi.string().max(150).required().messages({
+    license_plate: joi.string().max(50).required().messages({
         'string.base': 'O campo license_plate deve ser um conjunto de letras e números.',
         'any.required': 'O campo license_plate é obrigatório.',
-        'string.max': 'O campo license_plate deve ter menos de 151 caracteres.'
+        'string.max': 'O campo license_plate deve ter menos de 50 caracteres.'
     }),
-    engine_number: joi.string().max(150).required().messages({
+    engine_number: joi.string().max(50).required().messages({
         'string.base': 'O campo engine_number deve ser um conjunto de letras e números.',
         'any.required': 'O campo engine_number é obrigatório.',
-        'string.max': 'O campo engine_number deve ter menos de 151 caracteres.'
+        'string.max': 'O campo engine_number deve ter menos de 50 caracteres.'
     }),
-    chassis_number: joi.string().max(150).required().messages({
+    chassis_number: joi.string().max(50).required().messages({
         'string.base': 'O campo chassis_number deve ser um conjunto de letras e números.',
         'any.required': 'O campo chassis_number é obrigatório.',
-        'string.max': 'O campo chassis_number deve ter menos de 151 caracteres.'
+        'string.max': 'O campo chassis_number deve ter menos de 50 caracteres.'
     }),
-    tire_measurements: joi.string().max(150).required().messages({
+    tire_measurements: joi.string().max(50).required().messages({
         'string.base': 'O campo tire_measurements deve ser um conjunto de letras e números.',
         'any.required': 'O campo tire_measurements é obrigatório.',
-        'string.max': 'O campo tire_measurements deve ter menos de 151 caracteres.'
+        'string.max': 'O campo tire_measurements deve ter menos de 50 caracteres.'
     }),
     seating_capacity: joi.number().integer().min(1).max(20).required().messages({
         'number.base': 'O campo seating_capacity deve ser um número inteiro.',
@@ -53,8 +53,8 @@ const schema = joi.object({
         then: joi.string().min(3).max(50).required().messages({
             'string.base': 'O campo custom_fuel_type deve ser uma string válida.',
             'string.empty': 'O campo custom_fuel_type não pode ser vazio.',
+            'string.max': 'O campo Combustivel personalizado deve ter menos de 50 caracteres.',
             'string.min': 'O campo custom_fuel_type deve ter pelo menos 3 caracteres.',
-            'string.max': 'O campo custom_fuel_type não pode exceder 50 caracteres.',
             'any.required': 'O campo custom_fuel_type é obrigatório quando fuel_type é "Outro".'
         }),
         otherwise: joi.string().allow(null, '').optional().messages({
@@ -80,7 +80,7 @@ const schema = joi.object({
             'string.base': 'O campo custom_transmission_type deve ser uma string válida.',
             'string.empty': 'O campo custom_transmission_type não pode ser vazio.',
             'string.min': 'O campo custom_transmission_type deve ter pelo menos 3 caracteres.',
-            'string.max': 'O campo custom_transmission_type não pode exceder 50 caracteres.',
+            'string.max': 'O campo tipo de caixa personalizado deve ter menos de 50 caracteres.',
             'any.required': 'O campo custom_transmission_type é obrigatório quando transmission_type é "Outro".'
         }),
         otherwise: joi.string().allow(null, '').optional().messages({
@@ -122,10 +122,10 @@ const schema = joi.object({
         'number.min': 'O campo curb_weight_kg deve ser no mínimo 1.',
         'number.max': 'O campo curb_weight_kg deve ser no máximo 10000.'
     }),
-    vehicle_credential: joi.string().max(150).required().messages({
+    vehicle_credential: joi.string().max(50).required().messages({
     'string.base': 'O campo vehicle_credential deve ser uma string.',
     'any.required': 'O campo vehicle_credential é obrigatório.',
-    'string.max': 'O campo vehicle_credential deve ter no máximo 150 caracteres.'
+    'string.max': 'O campo vehicle_credential deve ter no máximo 50 caracteres.'
     }),
 
     vehicle_type: joi.string().max(50).required().messages({

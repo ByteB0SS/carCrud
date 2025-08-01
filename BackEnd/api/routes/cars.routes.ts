@@ -7,7 +7,7 @@ import vehicleSchema from '../validators/cars.validators.js'
 
 const router = Router()
 
-router.get('/', verifyToken, getAllCars)
+router.get('/', getAllCars)
 
 router.get('/selectOptions', getSelectOptions)
 
