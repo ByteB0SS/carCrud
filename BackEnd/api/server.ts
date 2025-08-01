@@ -10,8 +10,8 @@ dotenv.config();
 const server = express();
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // Limite de 100 requisições
+  windowMs: 60 * 1000, // 1 minuto
+  max: 20,             // Limite: 20 requisições por IP por minuto
   message: {
     msg: 'Muitas requisições, tente novamente mais tarde.',
     serverError: false,
@@ -19,6 +19,7 @@ const limiter = rateLimit({
     body: undefined
   }
 });
+
 
 server.use(limiter);
 server.use(cors())

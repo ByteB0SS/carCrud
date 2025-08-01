@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `car_project` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `car_project`;
 -- MySQL dump 10.13  Distrib 8.0.36, for Linux (x86_64)
 --
 -- Host: 127.0.0.1    Database: car_project
@@ -31,18 +29,8 @@ CREATE TABLE `admins` (
   `role` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'normal',
   PRIMARY KEY (`id`),
   UNIQUE KEY `admin_name` (`admin_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `admins`
---
-
-LOCK TABLES `admins` WRITE;
-/*!40000 ALTER TABLE `admins` DISABLE KEYS */;
-INSERT INTO `admins` VALUES (1,'root','$2b$15$S.bsHf7XJf3KsJwAmumIpegpkoz/7ER6a4/dqQu3Ef5GrLO9u2HJ6','root');
-/*!40000 ALTER TABLE `admins` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `cars`
@@ -71,19 +59,15 @@ CREATE TABLE `cars` (
   `curb_weight_kg` int NOT NULL,
   `custom_fuel_type` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `custom_transmission_type` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `vehicle_credential` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `vehicle_type` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `issued_at` date NOT NULL,
+  `valid_until` date NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `license_plate` (`license_plate`)
+  UNIQUE KEY `license_plate` (`license_plate`),
+  UNIQUE KEY `vehicle_credential` (`vehicle_credential`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cars`
---
-
-LOCK TABLES `cars` WRITE;
-/*!40000 ALTER TABLE `cars` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cars` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -94,4 +78,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-21  4:01:39
+-- Dump completed on 2025-08-01 18:51:02
