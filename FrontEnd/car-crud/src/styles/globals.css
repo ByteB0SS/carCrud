@@ -1,0 +1,391 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #343333;
+  --foreground2: #484747;
+  --vermelho-doc: #f53838;
+  --amarelo-doc: #FFCC00;
+  --preto-doc: #000000;
+  --laranja-doc: #f8c57e;
+  --fundo-doc: #fff1d5;
+  --doc-blue: #0059B2;
+}
+
+
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.screen {
+  width: 700px;
+  height: 100vh;
+  background-color: white;
+  margin: auto;
+  border: 1px solid rgba(0, 0, 0, 0.213);
+}
+
+.screen2 {
+  width: 700px;
+  margin: auto;
+  border: 1px solid rgba(0, 0, 0, 0.394);
+}
+
+.screen header,
+.screen2 header {
+  background-color: var(--foreground2);
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.screen main,
+.screen2 main {
+  padding: 10px;
+}
+
+.fore2 {
+  color: white;
+  background-color: var(--foreground2);
+}
+
+.fore {
+  color: white;
+  background-color: var(--foreground);
+}
+
+main h2 {
+  font-weight: bold;
+  font-size: large;
+}
+
+button {
+  cursor: pointer;
+}
+
+.button2,
+.button4 {
+  cursor: pointer;
+  border: 1px solid;
+  box-shadow: 0px 0px 5px 0px;
+  color: black;
+  font-weight: bold;
+  padding: 10px 20px;
+}
+
+.button4 {
+  color: white;
+  background-color: red;
+}
+
+button2:hover {
+  transform: scale(1.5);
+}
+
+.button3,
+.button-fore-2 {
+  cursor: pointer;
+  color: rgba(0, 0, 255, 0.689);
+  font-weight: bold;
+  padding: 5px 10px;
+  text-decoration: underline;
+}
+
+.button3:hover {
+  color: blue;
+  text-decoration: none;
+}
+
+
+/* Para navegadores baseados em WebKit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 8px;
+  /* Largura da barra */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  /* Fundo da trilha */
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--foreground2);
+  /* Cor do “botão” que você arrasta */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  /* Cor ao passar o mouse */
+}
+
+#shadow-box {
+  background-color: #000000e9;
+}
+
+#shadow-box {
+  display: none;
+}
+
+
+
+.text-red {
+  color: var(--color-red-600);
+}
+
+.disappear {
+  display: none;
+}
+
+.camp {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: bold;
+}
+
+input {
+  border: 2px solid black;
+  padding: 10px 20px;
+}
+
+.admin-form {
+  padding: 10px;
+  margin: auto;
+}
+
+.admin-form button {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.screen2 .admin-form {
+  width: 90%;
+  align-self: center;
+  height: auto;
+}
+
+nav#main-navegation li {
+  width: 100%;
+  height: 30px;
+}
+
+nav#main-navegation li a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.gradient-red {
+  background: linear-gradient(to right, var(--vermelho-doc) 80%, var(--fundo-doc) 100%);
+}
+
+.red {
+  background-color: red;
+}
+
+.white {
+  background-color: white;
+}
+
+
+.admin-screen {
+  position: relative;
+}
+
+.wave-container {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-70deg);
+  position: absolute;
+  color: var(--laranja-doc);
+}
+
+.nav-options li a {
+  display: block;
+  padding: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+.nav-options li:hover {
+  background: white;
+  color: black;
+}
+
+.nav-options {
+  background-color: var(--foreground);
+  color: white;
+  z-index: 999999999999;
+  position: absolute;
+  display: none;
+  width: 130px;
+}
+
+.menu:hover nav .nav-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-card section button {
+  border: 1px solid;
+  padding: 0 5px;
+}
+
+add-admin .error {
+  display: none;
+}
+
+.tooltip-container {
+  position: relative;
+  cursor: default;
+  display: inline-block;
+}
+
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  background-color: black;
+  color: white;
+  text-align: center;
+  padding: 3px 8px;
+  border-radius: 4px;
+  position: absolute;
+  z-index: 10;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: normal;
+  min-width: max-content;
+  max-width: 250px;
+  word-wrap: break-word;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+.document-A4 {
+  width: 1300px;
+  height: 800px;
+  min-width: 1300px;
+  min-height: 800px;
+  background: white;
+  margin: auto;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+
+.document-A4 header {
+  height: 20%;
+}
+
+.document-A4 main {
+  height: 65%;
+}
+
+.document-A4 footer {
+  height: 15%;
+}
+
+.childrens-document-settings {
+  padding: 5mm 8mm;
+}
+
+.document-gradient {
+  background: linear-gradient(to bottom, var(--fundo-doc), var(--fundo-doc), var(--laranja-doc));
+}
+
+.vehicle-credential {
+  border: 1px solid var(--fundo-doc);
+  background-color: var(--fundo-doc);
+}
+
+.transparent-black {
+  background-color: rgba(0, 0, 0, 0.089);
+  z-index: 20;
+}
+
+.container-border {
+  background: black; /* cor da borda */
+  padding: 8px;       /* espessura da borda */
+  display: inline-block;
+  width: max-content;
+  height: max-content;
+}
+
+.element {
+  background: #fdf1c1; /* fundo interno */
+  width: 300px;
+  height: 150px;
+
+  clip-path: polygon(
+    0% 0%, 98% 0%, 100% 2%,
+    100% 98%, 98% 100%,
+    2% 100%, 0% 98%, 0% 10%
+  );
+}
+
+
+.dad {
+  width: 100%;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.child {
+  font-size: clamp(0.75rem, 4vw, 1rem);
+  word-break: break-word;
+  white-space: normal;
+}
+
+@media (max-width: 1308px) {
+    .document-A4 {
+      transform: scale(0.8);
+    }
+}
+
+@media (max-width: 1050px) {
+    .document-A4 {
+      transform: scale(0.5);
+
+    }
+}
+
+@media (max-width: 610px) {
+    .document-A4 {
+      transform: scale(0.4);
+    }
+}
+
+@media (max-width: 501px) {
+    .document-A4 {
+      transform: scale(0.3);
+    }
+}
+
+.index .noIndex {
+  display: none;
+}
