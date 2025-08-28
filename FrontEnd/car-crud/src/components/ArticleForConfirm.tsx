@@ -20,7 +20,7 @@ export default function ArticleForConfirm (props: HiddenProps) {
 
 
     return (
-        <div onClick={closeHidden} id="shadow-box-delete" className="disappear flex w-full h-screen bg-black  fixed top-0 right-0 items-center justify-center">
+        <div onClick={closeHidden} id="shadow-box-delete" className="disappear transparentbg flex w-full h-screen z-50 fixed top-0 right-0 items-center justify-center">
             <article id="content-box" className="flex flex-col bg-white border p-10 gap-5">
                 <p>{props.msg}</p>
                 <div className="w-full flex justify-around">

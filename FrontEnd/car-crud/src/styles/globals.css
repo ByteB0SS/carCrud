@@ -329,23 +329,24 @@ add-admin .error {
 }
 
 .container-border {
-  background: black; /* cor da borda */
-  padding: 8px;       /* espessura da borda */
+  background: black;
+  /* cor da borda */
+  padding: 8px;
+  /* espessura da borda */
   display: inline-block;
   width: max-content;
   height: max-content;
 }
 
 .element {
-  background: #fdf1c1; /* fundo interno */
+  background: #fdf1c1;
+  /* fundo interno */
   width: 300px;
   height: 150px;
 
-  clip-path: polygon(
-    0% 0%, 98% 0%, 100% 2%,
-    100% 98%, 98% 100%,
-    2% 100%, 0% 98%, 0% 10%
-  );
+  clip-path: polygon(0% 0%, 98% 0%, 100% 2%,
+      100% 98%, 98% 100%,
+      2% 100%, 0% 98%, 0% 10%);
 }
 
 
@@ -362,30 +363,34 @@ add-admin .error {
 }
 
 @media (max-width: 1308px) {
-    .document-A4 {
-      transform: scale(0.8);
-    }
+  .document-A4 {
+    transform: scale(0.8);
+  }
 }
 
 @media (max-width: 1050px) {
-    .document-A4 {
-      transform: scale(0.5);
+  .document-A4 {
+    transform: scale(0.5);
 
-    }
+  }
 }
 
 @media (max-width: 610px) {
-    .document-A4 {
-      transform: scale(0.4);
-    }
+  .document-A4 {
+    transform: scale(0.4);
+  }
 }
 
 @media (max-width: 501px) {
-    .document-A4 {
-      transform: scale(0.3);
-    }
+  .document-A4 {
+    transform: scale(0.3);
+  }
 }
 
 .index .noIndex {
   display: none;
+}
+
+.transparentbg{
+  background-color: rgba(0, 0, 0, 0.252);
 }

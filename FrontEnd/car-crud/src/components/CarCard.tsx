@@ -13,7 +13,8 @@ interface carCardProps {
     license_plate: string
     id: number
     setError: React.Dispatch<React.SetStateAction<boolean>>
-    setWarning: React.Dispatch<React.SetStateAction<string>>    
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+    setWarning: React.Dispatch<React.SetStateAction<string>>
 }
 
 export default function CarCard(props: carCardProps) {
@@ -22,7 +23,7 @@ export default function CarCard(props: carCardProps) {
     async function handleDownload() {
         const res = await fetch("https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://youtube.com")
         const blob = await res.blob()
-        
+
         const linkTodownload = document.createElement("a")
         linkTodownload.href = URL.createObjectURL(blob)
         linkTodownload.download = "qrcode.png"
@@ -30,22 +31,37 @@ export default function CarCard(props: carCardProps) {
     }
 
     async function deleteCar() {
-        const res = await fetch(`${Global.apiUrl}cars/deleteCar/${props.id}`, {
-            method: 'DELETE',
-            headers: {
-                'auth': `${localStorage.getItem('token')}`
-            }
-        })
+        props.setLoading(true)
 
-        const json = await res.json()
-        if (json.status !== 200) {
-            props.setError(true)
-        } else {
-            document.getElementById(`car-card-${props.id}`)?.classList.add('disappear')
-            props.setError(false)
+        try {
+            const res = await fetch(`${Global.apiUrl}cars/deleteCar/${props.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'auth': `${localStorage.getItem('token')}`
+                }
+            })
+
+            const json = await res.json()
+            if (json.status !== 200) {
+                props.setError(true)
+            } else {
+                document.getElementById(`car-card-${props.id}`)?.classList.add('disappear')
+                props.setError(false)
+            }
+
+            props.setWarning(json.msg)
+
         }
 
-        props.setWarning(json.msg)
+        catch {
+            props.setError(true)
+            props.setWarning('Algum erro, tente mais tarde.')
+        }
+        props.setLoading(false)
+
+        setTimeout(()=> {
+            props.setWarning('')
+        },4000)
     }
 
     async function updateCar() {
@@ -83,11 +99,12 @@ export default function CarCard(props: carCardProps) {
             <article className="w-full flex justify-center h-auto  ">
                 <div className="qr-code flex    w-[50%] h-[50px]">
                     <button onClick={openHidden}>
-                        <img 
-                            src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http://localhost:3000/admin/Car/${props.id}`} 
-                            width={50} 
-                            height={50} 
-                            alt="qrcode img" 
+                        {/*eslint-disable-next-line*/}
+                        <img
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http://localhost:3000/admin/Car/${props.id}`}
+                            width={50}
+                            height={50}
+                            alt="qrcode img"
                         />
                     </button>
                     <div className="h-[50px] m-auto flex flex-col justify-around">
@@ -100,7 +117,7 @@ export default function CarCard(props: carCardProps) {
                     </div>
                 </div>
                 <div className="flex noIndex w-auto gap-2">
-                    
+
                     <div className="flex flex-col justify-around">
                         <button onClick={openArticleConfirm} className="text-white">
                             <Image alt="DELETE icon" src={'/delete.png'} width={15} height={15} />

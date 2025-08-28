@@ -8,6 +8,7 @@ interface adminCardProps {
     adminType: string
     setWarning:  React.Dispatch<React.SetStateAction<string>>
     adminId: number
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function AdminCard (props: adminCardProps) {
@@ -16,6 +17,7 @@ export default function AdminCard (props: adminCardProps) {
     const router = useRouter()
 
     async function deleteAdmin () {
+        props.setLoading(true)
         try{
             const res = await fetch(`${apiUrl}admin/delete/${props.adminId}`, {
                 method: 'DELETE',
@@ -33,17 +35,11 @@ export default function AdminCard (props: adminCardProps) {
             if(json.status === 200){
                 document.getElementById(`admin_card_${props.adminId}`)?.classList.add('disappear')
             }
-
-            if(json.status === 403){
-                setTimeout(()=> {
-                    router.push('/admin/Login')
-                }, 3000)
-            }
-
         }
         catch {
             props.setWarning('Algun erro ao se conectar ao servidor')
         }
+        props.setLoading(false)
     }
 
     async function updateCredentials () {
@@ -73,7 +69,7 @@ export default function AdminCard (props: adminCardProps) {
             </div>
 
             {/* Ações */}
-            <section className="flex w-full justify-end">
+            <section className="flex w-full  justify-end">
                 <button onClick={deleteAdmin} className="text-white">
                 <Image alt="DELETE icon" src="/delete.png" width={15} height={15} />
                 </button>

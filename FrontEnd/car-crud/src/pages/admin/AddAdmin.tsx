@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 export default function UpdateCredentiols() {
   const [warning, setWarning] = useState<string>("");
   const [adminName, setAdminName] = useState<string>("");
+  const [loadingRes, setLoadingRes] = useState<boolean>(false)
   const [adminPw, setAdminPw] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
   const [token, setToken] = useState<string | null>(null);
@@ -18,37 +19,54 @@ export default function UpdateCredentiols() {
   }, []);
 
   async function addAdmin() {
-    if (!token) return; // não chama se o token ainda não estiver carregado
+    if (!token) return;
 
     const body = { 
       adminName: adminName,
       passWord: adminPw,
     };
 
-    const res = await fetch(`${Global.apiUrl}admin/create`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        auth: `${token}`,
-      },
-      body: JSON.stringify(body),
-    });
+    try{
+      setLoadingRes(true)
+      const res = await fetch(`${Global.apiUrl}admin/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          auth: `${token}`,
+        },
+        body: JSON.stringify(body),
+      });
 
-    const json = await res.json();
+      const json = await res.json();
 
-    if (json.status === 403) {
-      setError(true);
-      setWarning(json.msg);
-      setTimeout(() => {
-        router.push("/admin/Login");
-      }, 3000);
-    } else if (json.status !== 200) {
-      setError(true);
-      setWarning(json.msg);
-    } else {
-      setError(false);
-      setWarning(json.msg);
+      setLoadingRes(false)
+
+      if (json.status === 403) {
+        setError(true);
+        setWarning(json.msg);
+        setTimeout(() => {
+          router.push("/admin/Login");
+        }, 3000);
+      } else if (json.status !== 200) {
+          setError(true);
+          setWarning(json.msg);
+      } else {
+          setError(false);
+          setWarning(json.msg);
+      }
+
+      setTimeout(()=> {
+        setWarning('')
+      }, 3000)
     }
+    catch{
+      setError(true)
+      setWarning('Algum erro ocorreu, caso o erro continue pode ser devido ao nosso sistema de segurança, então tente novamente daqui a 1 minuto')
+      setTimeout(()=>{
+        setWarning('')
+      }, 3000)
+    }
+    
   }
 
   return (
@@ -57,14 +75,15 @@ export default function UpdateCredentiols() {
       type="admin"
       warningError={error}
       warningText={warning}
+      loading={loadingRes}
     >
       <div className="add-admin">
-        <AdminForm
+        <AdminForm loading={false}
           error={false}
           setAdminNameValue={setAdminName}
           setAdminPwValue={setAdminPw}
           textButton="Adcionar A.D.M"
-          textWarning="any"
+          textWarning=""
           adminNameValue={adminName}
           adminPwValue={adminPw}
           buttonFunction={addAdmin}

@@ -17,13 +17,14 @@ export default function AllAdmins () {
     const [warning, setWarning] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
     const [users, setUseres] = useState<userType[]>([])
+    const [loadingRes, setLoadingRes] = useState<boolean>(false)
+    const [loadingAdmins, setLoadingAdmins] = useState<boolean>(true)
 
 
     useEffect(()=>{
         const token = localStorage.getItem('token')
 
         setTimeout(()=> {}, 2000)
-        
         async function main (){
             const res = await fetch(`${apiUrl}admin`, {
                 method: "GET",
@@ -50,19 +51,18 @@ export default function AllAdmins () {
                 setWarning(json.msg)
                 setError(true)
             }
-
-            console.log(json)
+            
+            setLoadingAdmins(false)
         } 
-
 
         main()
         {/*eslint-disable-next-line */}
     }, [])
 
     return (
-        <AdminScreen warningText={warning} warningError={error} headerTitle="Todos os administradores" type="admin">
+        <AdminScreen loading={loadingRes} warningText={warning} warningError={error} headerTitle="Todos os administradores" type="admin">
             <section>
-                <AdminCards setWarning={setWarning} users={users}></AdminCards>
+                <AdminCards setDeleting={setLoadingRes} loaging={loadingAdmins} setWarning={setWarning} users={users}></AdminCards>
             </section>
         </AdminScreen>
     )

@@ -7,11 +7,13 @@ export default function Login() {
     const [adminName, setAdminName] = useState<string>("")
     const [adminPw, setAdminPw] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const [warning, setWarning] = useState<string>("")
     const apiUrl = Global.apiUrl
     const router = useRouter()
 
     async function updateCred () {
+        setLoading(true)
         const urlrote = `${apiUrl}admin/update`
 
         const res = await fetch(urlrote, {
@@ -45,7 +47,13 @@ export default function Login() {
         else{
             setError(true)
         }
+
+        setLoading(false)
         
+
+        setTimeout(()=> {
+            setWarning('')
+        }, 4000)
     } 
 
     return (
@@ -56,7 +64,7 @@ export default function Login() {
                 </header>
                 <main className="flex flex-col">
                     <h2>Login</h2>
-                    <AdminForm disabled={false} error={error} textWarning={warning} textButton="Actualizar credenciais" buttonFunction={updateCred} adminNameValue={adminName} adminPwValue={adminPw} setAdminNameValue={setAdminName} setAdminPwValue={setAdminPw}></AdminForm>
+                    <AdminForm loading={loading} disabled={false} error={error} textWarning={warning} textButton="Actualizar credenciais" buttonFunction={updateCred} adminNameValue={adminName} adminPwValue={adminPw} setAdminNameValue={setAdminName} setAdminPwValue={setAdminPw}></AdminForm>
                 </main>
             </div>
             </div> 

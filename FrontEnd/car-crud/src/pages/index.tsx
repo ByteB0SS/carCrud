@@ -6,6 +6,8 @@ export default function Home() {
   {/*eslint-disable-next-line */}
   const [error, setError] = useState<boolean>(true);
   {/*eslint-disable-next-line */}
+  const [loading, setLoading] = useState<boolean>(false);
+  {/*eslint-disable-next-line */}
   const [warning, setWarning] = useState<string>('');
 
 
@@ -20,7 +22,7 @@ export default function Home() {
           <h2>Carros</h2>
           
           <section className="cars-cards">
-            <CarsCard setError={setError} setWarning={setWarning}></CarsCard>
+            <CarsCard setLoading={setLoading} setError={setError} setWarning={setWarning}></CarsCard>
           </section>
         </main>
       </div>

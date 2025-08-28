@@ -19,7 +19,7 @@ export default function QrCodeHide (props: HiddenProps) {
 
 
     return (
-        <div onClick={closeHidden} id="shadow-box" className="flex w-full h-screen bg-black fixed top-0 right-0 items-center justify-center">
+        <div onClick={closeHidden} id="shadow-box" className="flex w-full h-screen z-50 bg-black fixed top-0 right-0 items-center justify-center">
             <article id="content-box">
                 {/* eslint-disable-next-line */}
                 <img src={props.qrCodeLink} alt="qr destacado" width={300} height={300}></img>

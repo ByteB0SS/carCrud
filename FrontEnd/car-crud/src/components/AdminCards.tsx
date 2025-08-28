@@ -1,6 +1,7 @@
 import AdminCard from "./AdminCard";
 import Link from "next/link";
 import React from "react";
+import Loader from "./Loader";
 
 interface userInterface {
     id: number,
@@ -9,8 +10,10 @@ interface userInterface {
 }
 
 interface AdminCards {
-    users: userInterface[],
+    loaging: boolean
+    users: userInterface[]
     setWarning: React.Dispatch<React.SetStateAction<string>>
+    setDeleting: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function AdminCards (props: AdminCards) {
@@ -22,13 +25,15 @@ export default function AdminCards (props: AdminCards) {
                 <article>Opções</article>
             </section>
 
-            <div className="flex flex-col max-h-[500px] overflow-y-auto gap-2.5">
+            <div className="flex flex-col max-h-[500px] relative min-h-[100px] overflow-y-auto gap-2.5">
                 {
-                    props.users.map((user) => {
-                        return (
-                            <AdminCard key={user.id} adminId={user.id} adminName={user.admin_name} adminType={user.role} setWarning={props.setWarning}></AdminCard>
-                        )
-                    })
+                    props.loaging ? <Loader/> : (
+                        props.users.map((user) => {
+                            return (
+                                <AdminCard setLoading={props.setDeleting} key={user.id} adminId={user.id} adminName={user.admin_name} adminType={user.role} setWarning={props.setWarning}></AdminCard>
+                            )
+                        })
+                    )
                 }
             </div>
                 

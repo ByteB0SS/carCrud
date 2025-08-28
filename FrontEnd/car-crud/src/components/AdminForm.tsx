@@ -1,4 +1,5 @@
 import Message from "./Message"
+import Loader from "./Loader"
 
 
 interface adminFormProps {
@@ -11,6 +12,7 @@ interface adminFormProps {
     setAdminNameValue: (value: string) => void
     setAdminPwValue: (value: string) => void
     disabled: boolean
+    loading: boolean
 }
 
 export default function AdminForm (props: adminFormProps) {
@@ -27,8 +29,11 @@ export default function AdminForm (props: adminFormProps) {
                 </div>
             </div>
             <button type="button" className='button2' disabled={props.disabled} onClick={props.buttonFunction}>{props.textButton}</button>
-            <div id="warning" className="error">
-                <Message error={props.error} text={props.textWarning} >{undefined}</Message>
+            <div id="warning" className="error relative min-h-[70px]">
+                {
+                    props.loading ? <Loader/> : <Message error={props.error} text={props.textWarning} >{undefined}</Message>
+                }
+                
             </div>
         </form>
     )

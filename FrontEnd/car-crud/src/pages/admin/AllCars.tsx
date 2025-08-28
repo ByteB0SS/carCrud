@@ -5,10 +5,11 @@ import { useState } from "react";
 export default function AllAdmins () {  
     const [error, setError] = useState<boolean>(false)
     const [warning, setWarning] = useState<string>('')
+    const [loadingRes, setLoadingRes] = useState<boolean>(false)
     return (
-        <AdminScreen warningText={warning} warningError={error} headerTitle="Todos os Carros" type="car">
+        <AdminScreen loading={loadingRes} warningText={warning} warningError={error} headerTitle="Todos os Carros" type="car">
             <div>
-                <CarsCard setWarning={setWarning} setError={setError}>
+                <CarsCard setLoading={setLoadingRes}  setWarning={setWarning} setError={setError}>
                     
                 </CarsCard>
             </div>

@@ -28,3 +28,4 @@ export interface CarPropetiesInterface {
     issued_at: string,
     valid_until: string
   }
+

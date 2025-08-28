@@ -11,7 +11,7 @@ const server = express();
 
 const limiter = rateLimit({
   windowMs: 60 * 1000, // 1 minuto
-  max: 20,             // Limite: 20 requisições por IP por minuto
+  max: 40,             // Limite: 40 requisições por IP por minuto
   message: {
     msg: 'Muitas requisições, tente novamente mais tarde.',
     serverError: false,
@@ -20,20 +20,15 @@ const limiter = rateLimit({
   }
 });
 
-
 server.use(limiter);
 server.use(cors())
-/*server.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true
-}))*/
+
 server.use(express.json());
 
 
 server.use('/cars', carRoutes);
 server.use('/admin', adminRoutes);
 
-// Proteção de CORS (se necessário)
 server.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -41,8 +36,6 @@ server.use((req, res, next) => {
   next();
 });
 
-// Definir porta
 const port: number = 8558;
 
-// Iniciar o servidor
 server.listen(port, () => console.log(`Servidor rodando em http://localhost:${port}`));

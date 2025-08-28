@@ -6,17 +6,19 @@ import Message from "./Message"
 import GoToLoginBtn from "./GoToLoginBtn"
 import Global, {CarPropetiesInterface} from "@/global/Global"
 import React from "react"
+import Loader from "./Loader"
 
 interface carsCardsProps {
     setWarning: React.Dispatch<SetStateAction<string>>
     setError: React.Dispatch<SetStateAction<boolean>>
+    setLoading: React.Dispatch<SetStateAction<boolean>>
 }
 
 export default function CarsCard(props: carsCardsProps) {
     const [warning, setWarning] = useState('')
     const [cars, setCars] = useState<CarPropetiesInterface[]>([])  // Estado para guardar os carros
-    const [isLoading, setIsLoading] = useState<boolean>(true)
     const router = useRouter()
+    const [loading, setLoading] = useState<boolean>(false)
 
     function goToAddCarPage () {
     const storageToken = localStorage.getItem('token')
@@ -33,24 +35,37 @@ export default function CarsCard(props: carsCardsProps) {
 
 
     async function getCars () {
-        const apiUrl = Global.apiUrl
-        const res = await fetch(`${apiUrl}cars`, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-                'auth': `${localStorage.getItem('token')}`
+        setLoading(true)
+        try {
+            const apiUrl = Global.apiUrl
+            const res = await fetch(`${apiUrl}cars`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth': `${localStorage.getItem('token')}`
+                }
+            })
+
+            const json = await res.json()
+
+            if (json.status === 403){
+                router.push('/admin/Login')
+            } else {
+                setCars(json.body || [])
             }
-        })
 
-        const json = await res.json()
-
-        if (json.status === 403){
-            router.push('/admin/Login')
-        } else {
-            setCars(json.body || [])
         }
 
-        setIsLoading(false)
+        catch {
+            
+            setWarning('Algum erro, tente novamente, caso o problema continue tente navamente depois de 1 min deve ser devido o nosso sistema de segurança.')
+            setTimeout(()=> {
+                setWarning('')
+            }, 3000)
+        }
+        
+
+        setLoading(false)
     }   
 
     useEffect(()=>{
@@ -67,15 +82,16 @@ export default function CarsCard(props: carsCardsProps) {
                 <article className="w-full text-center">Qr-Code</article>
             </section>
 
-            <div className="w-[90%] my-2.5 m-auto overflow-y-auto max-h-[500px] py-2.5">
+            <div className="w-[90%] my-2.5 m-auto overflow-y-auto max-h-[500px] min-h-[100px] relative py-2.5">
                 {
-                    isLoading ? (
-                        <p>Carregando...</p>
+                    loading ? (
+                        <Loader/>
                     ) : cars.length === 0 ? (
                         <p>Sem carros</p>
                     ) : (
                             cars.map((car) => (
                                 <CarCard
+                                    setLoading={props.setLoading}
                                     key={car.id}
                                     id={car.id}
                                     brand={car.brand}
@@ -98,7 +114,7 @@ export default function CarsCard(props: carsCardsProps) {
                 <Image src={'/eye.png'} width={20} height={10} alt="see more details" />
             </div>
 
-            <Message text={warning || ''} error={true}>
+            <Message class="disappear" text={warning || ''} error={true}>
                 <GoToLoginBtn />
             </Message>
         </div>

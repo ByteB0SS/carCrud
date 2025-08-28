@@ -5,6 +5,7 @@ import CarForm from '@/components/Carform'
 import Global from "@/global/Global"
 
 export default function UpdateCar(){
+    const [loading, setLoading] = useState(false)
     const [fuelType, setFuelType] = useState<string>('')
     const [transmissionType, setTransmissionType] = useState<string>('')
     // States para inputs
@@ -99,6 +100,9 @@ export default function UpdateCar(){
             gross_weight_kg: Number(grossWeightKg),
             curb_weight_kg: Number(curbWeightKg),
         }       
+
+        setLoading(true)
+
         try{
              const res = await fetch(`${Global.apiUrl}cars/updateCar/${localStorage.getItem('carToBeChangedId')}`,{
             method: 'PUT', 
@@ -124,15 +128,21 @@ export default function UpdateCar(){
             
             setWarning(json.msg)
         } catch {
-            setWarning('Erro ao conectar com o servidor')
+            setWarning('Algum erro tente mais tarde.')
             setError(true)
         }
+
+        setLoading(false)
+
+        setTimeout(()=> {
+            setWarning('')
+        }, 4000)
        
     }
 
 
     return(
-        <AdminScreen headerTitle="Actualizar carro" type="car" warningError={error} warningText={warning}>
+        <AdminScreen loading={loading} headerTitle="Actualizar carro" type="car" warningError={error} warningText={warning}>
             <CarForm
             toDoOnClick={updateCar}
 

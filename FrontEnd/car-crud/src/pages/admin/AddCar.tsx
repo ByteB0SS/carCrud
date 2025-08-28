@@ -4,6 +4,7 @@ import CarForm from '@/components/Carform'
 import Global from "@/global/Global"
 
 export default function AddCar(){
+    const [loadgingREs, setLoadingRes] = useState(false)
     const [fuelType, setFuelType] = useState<string>('')
     const [transmissionType, setTransmissionType] = useState<string>('')
     // States para inputs
@@ -52,7 +53,8 @@ export default function AddCar(){
             curb_weight_kg: Number(curbWeightKg),
         }       
         try{
-             const res = await fetch(`${Global.apiUrl}cars`,{
+            setLoadingRes(true)
+            const res = await fetch(`${Global.apiUrl}cars`,{
             method: 'POST', 
             headers: {
                 'Content-type': 'application/json',
@@ -72,18 +74,24 @@ export default function AddCar(){
             else{
                 setError(false)
             }
-            
+            setLoadingRes(false)
             setWarning(json.msg)
+            
         } catch {
-            setWarning('Erro ao conectar com o servidor')
+            setLoadingRes(false)
+            setWarning('Algum erro ocarrido, tente novamente, se persistir tente daqui a 1 minuto pode ser o nosso sistema de segurança')
             setError(true)
         }
+
+        setTimeout(()=> {
+            setWarning('')
+        }, 3000)
        
     }
 
 
     return(
-        <AdminScreen headerTitle="Adicionar Carro" type="car" warningError={error} warningText={warning}>
+        <AdminScreen loading={loadgingREs} headerTitle="Adicionar Carro" type="car" warningError={error} warningText={warning}>
             <CarForm
             toDoOnClick={addCarFunction}
 
