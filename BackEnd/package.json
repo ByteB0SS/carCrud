@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "nodemon --watch api/tests --ext ts --exec \"node --loader ts-node/esm api/tests/test.ts\"",
-    "dev": "nodemon --watch api --ext ts --exec \"node --loader ts-node/esm api/server.ts\""
+    "dev": "tsx watch api/server.ts"
   },
   "keywords": [],
   "author": "Rubem Ernesto Figueiredo",
@@ -15,13 +15,14 @@
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
-    "dotenv": "^17.2.0",
+    "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "express-rate-limit": "^8.0.1",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "memory-cache": "^0.2.0",
-    "mysql2": "^3.14.2"
+    "mysql2": "^3.14.2",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -29,9 +30,11 @@
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/memory-cache": "^0.2.6",
-    "@types/node": "^24.0.15",
+    "@types/node": "^24.3.0",
+    "@types/pg": "^8.15.5",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
   }
 }

@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import Jwt  from "jsonwebtoken";
-import { ObjectSchema } from "joi";
+import type { ObjectSchema } from "joi";
 
 export function verifyToken(req: Request, res: Response, next: NextFunction): Response | void {
     let decoded: Jwt.JwtPayload

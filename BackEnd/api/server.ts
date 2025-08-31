@@ -4,7 +4,7 @@ import adminRoutes from './routes/admin.routes.js';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 import cors from 'cors'
-
+import startDataBase from './models/startingServer.models.js';
 dotenv.config();
 
 const server = express();
@@ -38,4 +38,7 @@ server.use((req, res, next) => {
 
 const port: number = 8558;
 
-server.listen(port, () => console.log(`Servidor rodando em http://localhost:${port}`));
+server.listen(port, () => {
+  startDataBase()
+  console.log(`Servidor rodando em http://localhost:${port}`)
+});

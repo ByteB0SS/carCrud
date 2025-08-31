@@ -36,10 +36,7 @@ export default function AdminCards (props: AdminCards) {
                     )
                 }
             </div>
-                
-            <Link href={"/admin/AddAdmin"} className="button2 text-center w-[90%] m-auto">
-                <button>Adcionar A.D.M</button>
-            </Link>
+    
         </div>
         
     )

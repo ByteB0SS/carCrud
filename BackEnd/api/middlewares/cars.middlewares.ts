@@ -1,7 +1,7 @@
-import {Request, Response, NextFunction} from 'express';
+import type {Request, Response, NextFunction} from 'express';
 import dotenv from 'dotenv';
-import { returnType,  } from '../controllers/interfaces.controllers.js';
-import { ObjectSchema } from 'joi';
+import type { returnType,  } from '../controllers/interfaces.controllers.js';
+import type { ObjectSchema } from 'joi';
 import { getEnumValues } from "../models/adtional.models.js";
 
 

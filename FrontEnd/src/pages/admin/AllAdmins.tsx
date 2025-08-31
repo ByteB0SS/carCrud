@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 import Global from "@/global/Global"
 import AdminScreen from "@/components/AdminScreen"
 import AdminCards from "@/components/AdminCards"
-
+import Link from "next/link"
 const apiUrl = Global.apiUrl
 
 interface userType{
@@ -16,7 +16,7 @@ export default function AllAdmins () {
     const router = useRouter()
     const [warning, setWarning] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
-    const [users, setUseres] = useState<userType[]>([])
+    const [users, setUsers] = useState<userType[]>([])
     const [loadingRes, setLoadingRes] = useState<boolean>(false)
     const [loadingAdmins, setLoadingAdmins] = useState<boolean>(true)
 
@@ -35,7 +35,7 @@ export default function AllAdmins () {
             })
 
             const json = await res.json()
-            setUseres(json.body)
+            setUsers(json.body)
 
             // verifications
             if(json.status === 403){
@@ -62,8 +62,13 @@ export default function AllAdmins () {
     return (
         <AdminScreen loading={loadingRes} warningText={warning} warningError={error} headerTitle="Todos os administradores" type="admin">
             <section>
-                <AdminCards setDeleting={setLoadingRes} loaging={loadingAdmins} setWarning={setWarning} users={users}></AdminCards>
+                {
+                    users ? <AdminCards setDeleting={setLoadingRes} loaging={loadingAdmins} setWarning={setWarning} users={users}></AdminCards> : <p className="">Sem users</p>
+                }
             </section>
+            <Link href={"/admin/AddAdmin"} className="button2 mt-[20px] flex justify-center text-center w-[90%] m-auto">
+                <button className="w-[90%]">Adcionar A.D.M</button>
+            </Link>
         </AdminScreen>
     )
 }

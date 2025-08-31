@@ -1,10 +1,20 @@
 import pool from "../db.js";
-import { returnType } from "../controllers/interfaces.controllers.js";
+import type { returnType } from "../controllers/interfaces.controllers.js";
 
 // Função que retorna os valores possíveis de uma coluna ENUM da tabela 'cars'
 export async function getEnumValues(columnName: string): Promise<returnType> {
     try {
-        const [rows]: any = await pool.query(`SHOW COLUMNS FROM cars LIKE ?`, [columnName]);
+        const query = `
+            SELECT e.enumlabel AS value
+            FROM pg_type t
+            JOIN pg_enum e ON t.oid = e.enumtypid
+            JOIN information_schema.columns c 
+                ON c.udt_name = t.typname
+            WHERE c.table_name = 'cars' 
+              AND c.column_name = $1
+        `;
+
+        const { rows } = await pool.query(query, [columnName]);
 
         if (!rows || rows.length === 0) {
             return {
@@ -15,12 +25,8 @@ export async function getEnumValues(columnName: string): Promise<returnType> {
             };
         }
 
-        const typeDef: string = rows[0].Type; // e.g., "enum('A','B','C')"
-
-        // Extrai os valores entre aspas simples
-        const values = typeDef
-            .split("'")
-            .filter((_, i) => i % 2 !== 0);
+        // Extrai apenas os valores ENUM
+        const values = rows.map(r => r.value);
 
         return {
             serverError: false,

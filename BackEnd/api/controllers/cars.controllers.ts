@@ -1,8 +1,8 @@
-import { dontSendInterface, VehicleInterface } from "./interfaces.controllers.js";
-import { Request, Response } from 'express';
-import { postVehicleOnDb, updateCarOnDb, deleteCarOnDb, getAllCarsFromDb, getAdminById } from '../models/cars.models.js';
+import type { dontSendInterface, VehicleInterface } from "./interfaces.controllers.js";
+import type { Request, Response } from 'express';
+import { postVehicleOnDb, updateCarOnDb, getAllCarsFromDb, deleteCarOnDb, getAdminById} from '../models/cars.models.js';
 import { getEnumValues } from '../models/adtional.models.js';
-import { returnType } from "./interfaces.controllers.js";
+import type { returnType } from "./interfaces.controllers.js";
 
 
 // Function to add a car

@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express'
+import  { Router } from 'express'
 import { loginAdmin, updateCredentials, getAllAdmins, createAdmin, deleteAdmin} from '../controllers/admin.controllers.js'
 //import { loginAdmin, updateCredentials, , getAllAdmins} from '../controllers/admin.controllers.js'
 import { verifyToken, verifyWithJoi} from '../middlewares/both.middlewares.js'
