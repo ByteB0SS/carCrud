@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "nodemon --watch api/tests --ext ts --exec \"node --loader ts-node/esm api/tests/test.ts\"",
-    "dev": "tsx watch api/server.ts"
-  },
+  "test": "nodemon --watch api/tests --ext ts --exec \"node --loader ts-node/esm api/tests/test.ts\"",
+  "dev": "tsx watch api/server.ts",
+  "build": "tsc",
+  "start": "node dist/api/server.js"
+},
   "keywords": [],
   "author": "Rubem Ernesto Figueiredo",
   "type": "module",
