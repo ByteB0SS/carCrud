@@ -1,5 +1,5 @@
 export default class Global {
-    static apiUrl = 'http://localhost:8558/';
+    static apiUrl = 'https://nublapaymentsrecovery.onrender.com/';
 }
 
 
