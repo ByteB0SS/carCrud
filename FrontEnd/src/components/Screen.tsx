@@ -19,7 +19,7 @@ export default function Screen (props: screenProps) {
     }, []);
     
     return (
-        <div className="screen">    
+        <div className="screen page">    
             {props.children}
         </div>
     )

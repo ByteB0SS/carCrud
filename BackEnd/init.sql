@@ -37,7 +37,7 @@ SET default_table_access_method = heap;
 
 -- TABELA ADMINS (cria só se não existir)
 CREATE TABLE IF NOT EXISTS public.admins (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     admin_name character varying(50) NOT NULL,
     pass_word character varying(150) NOT NULL,
     role character varying(30) DEFAULT 'normal'::character varying NOT NULL
@@ -57,7 +57,7 @@ ALTER SEQUENCE IF EXISTS public.admins_id_seq OWNED BY public.admins.id;
 
 -- TABELA CARS (cria só se não existir)
 CREATE TABLE IF NOT EXISTS public.cars (
-    id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
     brand character varying(150) NOT NULL,
     model character varying(150) NOT NULL,
     color character varying(30) NOT NULL,

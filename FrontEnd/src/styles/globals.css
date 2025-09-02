@@ -10,7 +10,7 @@
   --laranja-doc: #f8c57e;
   --fundo-doc: #fff1d5;
   --doc-blue: #0059B2;
-}
+} 
 
 
 
@@ -230,10 +230,6 @@ nav#main-navegation li a {
   width: 130px;
 }
 
-.menu:hover nav .nav-options {
-  display: flex;
-  flex-direction: column;
-}
 
 .admin-card section button {
   border: 1px solid;
@@ -393,4 +389,31 @@ add-admin .error {
 
 .transparentbg{
   background-color: rgba(0, 0, 0, 0.252);
+}
+
+/* mobile */
+
+.nav-options-appear{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+@media (max-width: 900px) {
+  .page{
+    width: 100%;
+  }
+} 
+
+
+@media (max-width: 360px) {
+  html{
+    font-size: 62.5%;
+  }
+
+  .document-A4{
+    transform: scale(0.25);
+    font-size: 1.8rem;
+    margin-bottom: 45%;
+  }
 }

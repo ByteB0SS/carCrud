@@ -109,10 +109,10 @@ export default function CarCard(props: carCardProps) {
                     </button>
                     <div className="h-[50px] m-auto flex flex-col justify-around">
                         <button className="button" onClick={handleDownload}>
-                            <Image src={'/download.png'} width={15} height={15} alt="download button img" />
+                            <Image src={'/download.png'} width={20} height={20} alt="download button img" />
                         </button>
                         <Link href={`/admin/Car/${props.id}`} className="button">
-                            <Image src={'/eye.png'} width={15} height={15} alt="see more details" />
+                            <Image src={'/eye.png'} width={20} height={20} alt="see more details" />
                         </Link>
                     </div>
                 </div>

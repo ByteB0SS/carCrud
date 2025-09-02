@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { useState } from "react";
 import { v4  } from 'uuid';
 
 export interface nameAndLinkListInterface {
@@ -16,7 +17,7 @@ interface adminHeaderProps {
 
 export default function AdminHeader (props: adminHeaderProps) {
     const router = useRouter()
-
+    const [shownavoptions, setshownavoptions] = useState<boolean>(false)
     const adminRoutesList: nameAndLinkListInterface[] = [{nameLink: 'ver todos A.D.M', link:'/admin/AllAdmins'}, {nameLink: 'Adicionar A.D.M', link: '/admin/AddAdmin'}, {nameLink: 'Ir pra login', link: '/admin/Login'}]
     const carsRoutesList: nameAndLinkListInterface[] = [{nameLink: 'ver todos carros', link:'/admin/AllCars'}, {nameLink: 'Adcionar Carro', link: '/admin/AddCar'},{nameLink: 'Ir pra Login', link: '/admin/Login'}]
     const currentRoutes: nameAndLinkListInterface[] = props.type === 'car' ? carsRoutesList : adminRoutesList
@@ -51,13 +52,13 @@ export default function AdminHeader (props: adminHeaderProps) {
             <section className="title p-2.5 flex  justify-between font-bold">
                 <h1>{props.title}</h1>
 
-                <section className="menu">
-                    <div className="block cursor-pointer text-3xl font-bold">
+                <section className="menu items-end flex flex-col">
+                    <button onClick={()=> setshownavoptions(!shownavoptions)} className="block cursor-pointer text-3xl font-bold">
                         ≡
-                    </div>
+                    </button>
 
                     <nav>
-                        <ul className="border nav-options z-20 bg-[var(--foreground)]">
+                        <ul className={`border nav-options  bg-[var(--foreground)] ${shownavoptions ? 'nav-options-appear' : ''}`}>
                             {
                                 currentRoutes.map((element)=> {
                                     return(

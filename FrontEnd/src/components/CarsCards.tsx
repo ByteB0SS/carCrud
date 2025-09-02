@@ -110,8 +110,7 @@ export default function CarsCard(props: carsCardsProps) {
             </div>
 
             <div className="flex text-center justify-center gap-1 mt-10">
-                <p>para ver mais detalhes de um carro escaneie o qr code, ou clique em </p>
-                <Image src={'/eye.png'} width={20} height={10} alt="see more details" />
+                <p>para ver mais detalhes de um carro escaneie o qr code, ou clique no ícone de olho.</p>
             </div>
 
             <Message class="disappear" text={warning || ''} error={true}>

@@ -62,11 +62,12 @@ export async function postVehicleOnDb(data: VehicleInterface) {
         issued_at, valid_until
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
     `;
-
+    console.log('tentou')
     await pool.query(sql, values);
 
     return { msg: "Veículo adicionado com sucesso!", status: 201 };
   } catch (error: any) {
+    console.log('deu erro')
     console.error("Erro ao adicionar veículo:", error.message || error);
     return { serverError: true, status: 500, msg: "Erro ao adicionar veículo", detail: error?.message || "Erro desconhecido" };
   }

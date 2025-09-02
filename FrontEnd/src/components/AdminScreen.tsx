@@ -24,7 +24,7 @@ export default function AdminScreen(props: adminScreenProps){
     }, [])
 
     return (
-        <div className="w-[700px] h-screen m-auto admin-screen border relative">
+        <div className="page w-[700px] h-screen m-auto admin-screen border relative">
             <AdminHeader type={props.type}  title={props.headerTitle}/>
             <main className="p-2.5  h-[80%]">
                 <div className="h-full">
