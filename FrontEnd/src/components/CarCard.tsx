@@ -101,7 +101,7 @@ export default function CarCard(props: carCardProps) {
                     <button onClick={openHidden}>
                         {/*eslint-disable-next-line*/}
                         <img
-                            src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http://localhost:3000/admin/Car/${props.id}`}
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${Global.front_url}admin/Car/${props.id}`}
                             width={50}
                             height={50}
                             alt="qrcode img"
