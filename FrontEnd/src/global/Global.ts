@@ -1,5 +1,6 @@
 export default class Global {
     static apiUrl = 'https://nublapaymentsrecovery.onrender.com/'
+    static front_url = 'https://carsystem-2fb0.onrender.com/'
     /*static apiUrl = 'http://localhost:8558/'*/
 }
 

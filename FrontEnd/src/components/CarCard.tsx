@@ -21,7 +21,7 @@ export default function CarCard(props: carCardProps) {
     const router = useRouter()
 
     async function handleDownload() {
-        const res = await fetch(`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http://localhost:3000/admin/Car/${props.id}`)
+        const res = await fetch(`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${Global.front_url}admin/Car/${props.id}`)
         const blob = await res.blob()
 
         const linkTodownload = document.createElement("a")
@@ -129,7 +129,7 @@ export default function CarCard(props: carCardProps) {
                 </div>
             </article>
 
-            <QrCodeHide qrCodeLink={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http://localhost:3000/admin/Car/${props.id}`} />
+            <QrCodeHide qrCodeLink={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${Global.front_url}admin/Car/${props.id}`} />
             <ArticleForConfirm confirmFunction={deleteCar} msg="Tens certeza que quer apagar este carro?" />
         </section>
     )
